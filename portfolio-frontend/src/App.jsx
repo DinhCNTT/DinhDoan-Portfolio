@@ -13,10 +13,7 @@ import Loader from './components/Loader';
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
-  const [isLoading, setIsLoading] = useState(() => {
-    // Only load if not previously seen in this session
-    return !sessionStorage.getItem('intro_seen');
-  });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleLocationChange = () => {
@@ -45,7 +42,6 @@ function App() {
   }
 
   const handleLoaderComplete = () => {
-    sessionStorage.setItem('intro_seen', 'true');
     setIsLoading(false);
   };
 
