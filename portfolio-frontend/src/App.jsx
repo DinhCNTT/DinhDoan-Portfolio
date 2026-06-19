@@ -1,39 +1,67 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Skills from './components/Skills';
+import Projects from './components/Projects';
+import Experience from './components/Experience';
+import Education from './components/Education';
+import Footer from './components/Footer';
+import ChatbotWidget from './components/ChatbotWidget';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
+  const isAdmin = currentPath === '/admin';
+
+  if (isAdmin) {
+    return <AdminDashboard />;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#09090b] via-[#0f172a] to-[#09090b] text-[#f8fafc] flex flex-col items-center justify-center p-6 select-none font-sans">
-      <div className="max-w-xl text-center space-y-6">
-        {/* Accent logo */}
-        <div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/20 animate-pulse">
-          <span className="text-3xl">👨‍💻</span>
-        </div>
+    <div className="min-h-screen bg-cyber-bg text-slate-100 flex flex-col selection:bg-cyber-accent1/25 selection:text-cyber-accent1 select-none overflow-x-hidden relative">
+      {/* Visual cyber glow decoration */}
+      <div className="fixed top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyber-accent1/35 to-transparent z-40 pointer-events-none" />
 
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight font-sans">
-          Dinh Doan <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Portfolio</span>
-        </h1>
+      {/* Floating global scanlines (futuristic aesthetic) */}
+      <div className="fixed inset-0 pointer-events-none z-30 opacity-[0.03] scanlines" />
 
-        <p className="text-[#94a3b8] text-lg max-w-md mx-auto leading-relaxed">
-          Đang xây dựng Hệ thống Portfolio AI-Powered Fullstack (.NET 9, React 19, Supabase pgvector & SignalR).
-        </p>
+      {/* Navigation Bar */}
+      <Navbar />
 
-        <div className="flex justify-center gap-4">
-          <span className="px-4 py-2 rounded-full border border-purple-500/20 bg-purple-500/5 text-purple-300 text-sm font-medium">
-            .NET 9 Clean Architecture
-          </span>
-          <span className="px-4 py-2 rounded-full border border-pink-500/20 bg-pink-500/5 text-pink-300 text-sm font-medium">
-            React 19 + Tailwind
-          </span>
-        </div>
+      {/* Sections Layout */}
+      <main className="flex-1">
+        {/* Hero Banner Section */}
+        <Hero />
 
-        <div className="pt-4">
-          <button className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#a855f7] to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold shadow-md shadow-purple-500/10 transition-all hover:scale-105 duration-300 active:scale-95">
-            Duyệt qua Kế hoạch dự án ⚡
-          </button>
-        </div>
-      </div>
+        {/* Dynamic Skills Grid Section */}
+        <Skills />
+
+        {/* Projects Grid Section */}
+        <Projects />
+
+        {/* Professional Experience Section */}
+        <Experience />
+
+        {/* Education & Achievements Section */}
+        <Education />
+      </main>
+
+      {/* Chat Assistant Widget */}
+      <ChatbotWidget />
+
+      {/* Page Footer */}
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

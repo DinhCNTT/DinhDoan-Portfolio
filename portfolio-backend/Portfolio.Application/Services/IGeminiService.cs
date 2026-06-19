@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Portfolio.Application.Services
@@ -6,5 +7,7 @@ namespace Portfolio.Application.Services
     {
         Task<float[]> GenerateEmbeddingAsync(string text);
         Task<string> GenerateTextAsync(string systemPrompt, string userPrompt);
+        IAsyncEnumerable<string> StreamTextAsync(string systemPrompt, string userPrompt);
     }
 }
+

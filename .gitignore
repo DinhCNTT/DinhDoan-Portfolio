@@ -17,7 +17,7 @@ publish/
 appsettings.json
 appsettings.Development.json
 appsettings.Production.json
-
+test_signalr.html
 
 ## Node.js / Frontend
 node_modules/

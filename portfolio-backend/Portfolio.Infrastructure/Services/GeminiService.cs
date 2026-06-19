@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -87,7 +89,7 @@ namespace Portfolio.Infrastructure.Services
                         }
                     }
                 },
-                systemInstruction = new
+                system_instruction = new
                 {
                     parts = new[]
                     {
@@ -113,6 +115,89 @@ namespace Portfolio.Infrastructure.Services
                 .GetString();
 
             return generatedText ?? string.Empty;
+        }
+
+        public async IAsyncEnumerable<string> StreamTextAsync(string systemPrompt, string userPrompt)
+        {
+            var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse";
+
+            var requestBody = new
+            {
+                contents = new[]
+                {
+                    new
+                    {
+                        role = "user",
+                        parts = new[]
+                        {
+                            new { text = userPrompt }
+                        }
+                    }
+                },
+                system_instruction = new
+                {
+                    parts = new[]
+                    {
+                        new { text = systemPrompt }
+                    }
+                }
+            };
+
+            var json = JsonSerializer.Serialize(requestBody);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
+
+            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Gemini API error: {response.StatusCode} - {errorContent}");
+            }
+
+            using var stream = await response.Content.ReadAsStreamAsync();
+            using var reader = new StreamReader(stream);
+
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                if (line.StartsWith("data: "))
+                {
+                    var dataJson = line.Substring(6).Trim();
+                    if (dataJson == "[DONE]") break;
+
+                    JsonDocument doc;
+                    try
+                    {
+                        doc = JsonDocument.Parse(dataJson);
+                    }
+                    catch (JsonException)
+                    {
+                        continue;
+                    }
+
+                    using (doc)
+                    {
+                        if (doc.RootElement.TryGetProperty("candidates", out var candidates) &&
+                            candidates.GetArrayLength() > 0)
+                        {
+                            var candidate = candidates[0];
+                            if (candidate.TryGetProperty("content", out var contentObj) &&
+                                contentObj.TryGetProperty("parts", out var parts) &&
+                                parts.GetArrayLength() > 0)
+                            {
+                                var text = parts[0].GetProperty("text").GetString();
+                                if (!string.IsNullOrEmpty(text))
+                                {
+                                    yield return text;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -8,15 +8,20 @@ export default {
     extend: {
       colors: {
         cyber: {
-          dark: '#09090b', // Zinc dark
-          slate: '#0f172a', // Slate dark
-          light: '#f8fafc', // Light text
-          muted: '#94a3b8', // Muted text
-          neon: '#a855f7', // Neon purple
+          bg: '#030712',
+          card: 'rgba(17, 24, 39, 0.7)',
+          accent1: '#06b6d4', // Cyber Cyan
+          accent2: '#a855f7', // Neon Purple
+          accent3: '#d946ef', // Neon Pink
         }
       },
       fontFamily: {
-        sans: ['Outfit', 'Inter', 'sans-serif'],
+        orbitron: ['Orbitron', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      },
+      animation: {
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       }
     },
   },

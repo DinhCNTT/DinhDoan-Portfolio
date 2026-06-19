@@ -1,4 +1,8 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Portfolio.API.Hubs;
 using Portfolio.Application.Services;
 using Portfolio.Domain.Interfaces;
 using Portfolio.Infrastructure.Data;
@@ -26,12 +30,33 @@ builder.Services.AddScoped<ICvEmbeddingRepository, CvEmbeddingRepository>();
 // Register Gemini Service with HttpClient
 builder.Services.AddHttpClient<IGeminiService, GeminiService>();
 
+// Configure JWT Authentication
+var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key is missing in settings");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+
 // Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:3000") // Vite development ports
+        policy.SetIsOriginAllowed(origin => true) // Allow any origin (including null origin from file://)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials(); // Required for SignalR
@@ -54,8 +79,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Map Hubs placeholder (we will add ChatHub in phase 3)
-// app.MapHub<ChatHub>("/chatHub");
+// Map Hubs for SignalR real-time communications
+app.MapHub<ChatHub>("/chatHub");
 
 app.MapGet("/", () => "Dinh Doan Portfolio Fullstack API is running... 🚀");
 
