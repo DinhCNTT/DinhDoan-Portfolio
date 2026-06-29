@@ -22,8 +22,15 @@ namespace Portfolio.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var skills = await _skillRepository.GetAllAsync();
-            return Ok(skills);
+            try
+            {
+                var skills = await _skillRepository.GetAllAsync();
+                return Ok(skills);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi kết nối cơ sở dữ liệu", error = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]

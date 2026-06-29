@@ -22,8 +22,15 @@ namespace Portfolio.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var projects = await _projectRepository.GetAllAsync();
-            return Ok(projects);
+            try
+            {
+                var projects = await _projectRepository.GetAllAsync();
+                return Ok(projects);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi kết nối cơ sở dữ liệu", error = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]

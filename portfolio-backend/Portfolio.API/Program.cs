@@ -82,6 +82,29 @@ app.MapControllers();
 // Map Hubs for SignalR real-time communications
 app.MapHub<ChatHub>("/chatHub");
 
-app.MapGet("/", () => "Dinh Doan Portfolio Fullstack API is running... 🚀");
+app.MapGet("/", async (ApplicationDbContext dbContext) =>
+{
+    try
+    {
+        // Kiểm tra kết nối database -> Tạo lưu lượng truy vấn thực tế để giữ Supabase luôn thức
+        bool canConnect = await dbContext.Database.CanConnectAsync();
+        return Results.Ok(new
+        {
+            Status = "Online",
+            Database = canConnect ? "Connected" : "Disconnected",
+            Message = "Dinh Doan Portfolio Fullstack API is running... 🚀"
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.Json(new
+        {
+            Status = "Online",
+            Database = "Error",
+            Error = ex.Message,
+            Message = "Dinh Doan Portfolio Fullstack API is running... 🚀"
+        }, statusCode: 200);
+    }
+});
 
 app.Run();
