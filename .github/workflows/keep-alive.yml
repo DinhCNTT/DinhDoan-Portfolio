@@ -1,0 +1,19 @@
+name: Keep Backend Alive
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # Chạy mỗi 10 phút để giữ server Render luôn thức
+  workflow_dispatch: # Cho phép kích hoạt thủ công từ tab Actions trên GitHub
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Backend Server
+        run: |
+          if [ -z "${{ secrets.BACKEND_URL }}" ]; then
+            echo "LỖI: Chưa cấu hình secrets.BACKEND_URL trong cài đặt Repository."
+            echo "Vui lòng vào Settings -> Secrets and variables -> Actions -> New repository secret -> Tạo BACKEND_URL với giá trị là đường dẫn API backend của bạn."
+            exit 1
+          fi
+          curl -s "${{ secrets.BACKEND_URL }}" || echo "Ping thất bại nhưng vẫn bỏ qua để không báo đỏ workflow"

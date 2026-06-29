@@ -201,18 +201,32 @@ export default function AdminDashboard() {
         setStats(prev => ({ ...prev, onlineCount: count }));
       });
 
+      let reconnectTimeoutId = null;
+
       const startConnection = async () => {
+        if (newConnection.state === signalR.HubConnectionState.Connected) {
+          return;
+        }
         try {
           await newConnection.start();
           console.log("Admin connected to ChatHub for real-time online tracking!");
         } catch (err) {
-          console.error("SignalR Connection error in admin:", err);
+          console.error("SignalR Connection error in admin, retrying in 5s:", err);
+          if (reconnectTimeoutId) clearTimeout(reconnectTimeoutId);
+          reconnectTimeoutId = setTimeout(startConnection, 5000);
         }
       };
+
+      newConnection.onclose((err) => {
+        console.log("Admin SignalR Connection closed. Attempting reconnect in 5s...", err);
+        if (reconnectTimeoutId) clearTimeout(reconnectTimeoutId);
+        reconnectTimeoutId = setTimeout(startConnection, 5000);
+      });
 
       startConnection();
 
       return () => {
+        if (reconnectTimeoutId) clearTimeout(reconnectTimeoutId);
         if (newConnection) {
           newConnection.stop();
         }

@@ -22,7 +22,7 @@ const experiences = [
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-24 relative overflow-hidden bg-cyber-bg border-t border-white/5">
+    <section id="experience" className="py-24 relative overflow-hidden bg-transparent border-t border-white/5">
       <div className="absolute top-1/2 left-10 w-96 h-96 rounded-full bg-cyber-accent1/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-4 md:px-8 relative z-10">
@@ -49,7 +49,7 @@ export default function Experience() {
               className="relative pl-8 md:pl-10"
             >
               {/* Pulsing Timeline Node */}
-              <div className="absolute -left-[9px] top-1.5 w-4.5 h-4.5 rounded-full border border-cyber-accent1 bg-cyber-bg flex items-center justify-center">
+              <div className="absolute -left-[9px] top-1.5 w-4.5 h-4.5 rounded-full border border-cyber-accent1 bg-[#030712] flex items-center justify-center">
                 <div className="w-2 h-2 rounded-full bg-cyber-accent1 animate-ping" />
                 <div className="w-2 h-2 rounded-full bg-cyber-accent1 absolute" />
               </div>

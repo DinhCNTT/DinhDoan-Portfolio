@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import ChatbotWidget from './components/ChatbotWidget';
 import AdminDashboard from './components/AdminDashboard';
 import Loader from './components/Loader';
+import CyberBackground from './components/CyberBackground';
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -22,6 +23,13 @@ function App() {
     window.addEventListener('popstate', handleLocationChange);
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
+
+  useEffect(() => {
+    // Wake up backend (cold start wake-up ping for free tiers like Render)
+    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    fetch(backendUrl).catch((err) => console.log("Cold start ping initiated."));
+  }, []);
+
 
   // Control page scroll when loading
   useEffect(() => {
@@ -54,6 +62,9 @@ function App() {
       </AnimatePresence>
 
       <div className="min-h-screen bg-cyber-bg text-slate-100 flex flex-col selection:bg-cyber-accent1/25 selection:text-cyber-accent1 select-none overflow-x-hidden relative">
+        {/* Cyberpunk Dynamic Background */}
+        <CyberBackground />
+
         {/* Visual cyber glow decoration */}
         <div className="fixed top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyber-accent1/35 to-transparent z-40 pointer-events-none" />
 

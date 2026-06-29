@@ -4,7 +4,7 @@ import { GraduationCap, Award, BookOpen, Languages, CheckCircle2 } from 'lucide-
 
 export default function Education() {
   return (
-    <section id="education" className="py-24 relative overflow-hidden bg-cyber-bg border-t border-white/5">
+    <section id="education" className="py-24 relative overflow-hidden bg-transparent border-t border-white/5">
       <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-cyber-accent2/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-4 md:px-8 relative z-10">

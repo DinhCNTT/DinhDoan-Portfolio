@@ -86,18 +86,32 @@ export default function ChatbotWidget() {
     connectionRef.current = newConnection;
     setConnection(newConnection);
 
+    let reconnectTimeoutId = null;
+
     const startConnection = async () => {
+      if (newConnection.state === signalR.HubConnectionState.Connected) {
+        return;
+      }
       try {
         await newConnection.start();
         console.log("SignalR Connected to ChatHub!");
       } catch (err) {
-        console.error("SignalR Connection Error: ", err);
+        console.error("SignalR Connection Error, retrying in 5s: ", err);
+        if (reconnectTimeoutId) clearTimeout(reconnectTimeoutId);
+        reconnectTimeoutId = setTimeout(startConnection, 5000);
       }
     };
+
+    newConnection.onclose((err) => {
+      console.log("SignalR Connection closed. Attempting reconnect in 5s...", err);
+      if (reconnectTimeoutId) clearTimeout(reconnectTimeoutId);
+      reconnectTimeoutId = setTimeout(startConnection, 5000);
+    });
 
     startConnection();
 
     return () => {
+      if (reconnectTimeoutId) clearTimeout(reconnectTimeoutId);
       if (connectionRef.current) {
         connectionRef.current.stop();
       }

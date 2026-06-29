@@ -40,7 +40,7 @@ export default function Hero() {
   return (
     <section 
       id="home" 
-      className="min-h-screen relative flex items-center justify-center pt-28 pb-16 overflow-hidden bg-cyber-bg bg-grid"
+      className="min-h-screen relative flex items-center justify-center pt-28 pb-16 overflow-hidden bg-transparent"
     >
       {/* Background Radial Glow */}
       <div className="absolute inset-0 bg-radial-glow pointer-events-none z-0" />

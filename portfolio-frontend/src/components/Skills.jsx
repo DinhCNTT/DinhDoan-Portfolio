@@ -38,7 +38,8 @@ export default function Skills() {
   const [hoveredSkill, setHoveredSkill] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/skills')
+    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    fetch(`${backendUrl}/api/skills`)
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
@@ -123,7 +124,7 @@ export default function Skills() {
   };
 
   return (
-    <section id="skills" className="py-24 relative overflow-hidden bg-cyber-bg border-t border-white/5">
+    <section id="skills" className="py-24 relative overflow-hidden bg-transparent border-t border-white/5">
       {/* Light highlights */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-cyber-accent1/5 blur-[120px] pointer-events-none" />
 

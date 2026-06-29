@@ -51,7 +51,8 @@ export default function Projects() {
   const [projects, setProjects] = useState(projectsData);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/projects')
+    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    fetch(`${backendUrl}/api/projects`)
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
@@ -81,7 +82,7 @@ export default function Projects() {
   });
 
   return (
-    <section id="projects" className="py-24 relative overflow-hidden bg-cyber-bg border-t border-white/5">
+    <section id="projects" className="py-24 relative overflow-hidden bg-transparent border-t border-white/5">
       <div className="absolute top-1/3 right-10 w-96 h-96 rounded-full bg-cyber-accent2/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
