@@ -150,37 +150,49 @@ export default function ChatbotWidget() {
     setMessages(prev => [...prev, botMsgPlaceholder]);
 
     // 3. Invoke Stream
-    if (connectionRef.current && connectionRef.current.state === signalR.HubConnectionState.Connected) {
-      let accumulatedText = "";
-      
-      connectionRef.current.stream("SendMessage", sessionId, trimmedText).subscribe({
-        next: (chunk) => {
-          setIsTyping(false);
-          accumulatedText += chunk;
-          setMessages(prev =>
-            prev.map(m => m.id === botMsgId ? { ...m, text: accumulatedText } : m)
-          );
-        },
-        complete: () => {
-          setMessages(prev =>
-            prev.map(m => m.id === botMsgId ? { ...m, isStreaming: false } : m)
-          );
-        },
-        error: (err) => {
-          setIsTyping(false);
-          console.error("Streaming error:", err);
-          setMessages(prev =>
-            prev.map(m =>
-              m.id === botMsgId
-                ? { ...m, text: "Có lỗi xảy ra khi kết nối máy chủ AI. Vui lòng thử lại sau!", isStreaming: false }
-                : m
-            )
-          );
-        }
-      });
-    } else {
-      // Reconnection fallback
-      setTimeout(() => {
+    // 3. Invoke Stream
+    const sendStream = async () => {
+      let checkCount = 0;
+      // Nếu đang trong quá trình kết nối, đợi tối đa 5 giây (10 lần * 500ms)
+      while (
+        connectionRef.current &&
+        connectionRef.current.state === signalR.HubConnectionState.Connecting &&
+        checkCount < 10
+      ) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        checkCount++;
+      }
+
+      if (connectionRef.current && connectionRef.current.state === signalR.HubConnectionState.Connected) {
+        let accumulatedText = "";
+        
+        connectionRef.current.stream("SendMessage", sessionId, trimmedText).subscribe({
+          next: (chunk) => {
+            setIsTyping(false);
+            accumulatedText += chunk;
+            setMessages(prev =>
+              prev.map(m => m.id === botMsgId ? { ...m, text: accumulatedText } : m)
+            );
+          },
+          complete: () => {
+            setMessages(prev =>
+              prev.map(m => m.id === botMsgId ? { ...m, isStreaming: false } : m)
+            );
+          },
+          error: (err) => {
+            setIsTyping(false);
+            console.error("Streaming error:", err);
+            setMessages(prev =>
+              prev.map(m =>
+                m.id === botMsgId
+                  ? { ...m, text: "Có lỗi xảy ra khi kết nối máy chủ AI. Vui lòng thử lại sau!", isStreaming: false }
+                  : m
+              )
+            );
+          }
+        });
+      } else {
+        // Reconnection fallback
         setIsTyping(false);
         setMessages(prev =>
           prev.map(m =>
@@ -189,8 +201,10 @@ export default function ChatbotWidget() {
               : m
           )
         );
-      }, 1500);
-    }
+      }
+    };
+
+    sendStream();
   };
 
   const clearChatHistory = () => {
