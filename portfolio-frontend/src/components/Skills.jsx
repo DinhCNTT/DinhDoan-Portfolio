@@ -15,11 +15,13 @@ const skillsData = [
   { name: '.NET 9 / C#', level: 85, category: 'Backend', icon: Shield },
   { name: 'EF Core', level: 85, category: 'Backend', icon: Shield },
   { name: 'SignalR Realtime', level: 80, category: 'Backend', icon: Shield },
+  { name: 'Socket.IO Realtime', level: 75, category: 'Backend', icon: Shield },
   { name: 'ML.NET & Gemini API', level: 75, category: 'Backend', icon: Shield },
   { name: 'React 19 / Vite', level: 75, category: 'Frontend', icon: Layout },
-  { name: 'Node.js / Express', level: 70, category: 'Backend', icon: Shield },
+  { name: 'Node.js / Express', level: 80, category: 'Backend', icon: Shield },
   { name: 'PostgreSQL', level: 80, category: 'Database', icon: Database },
   { name: 'SQL Server', level: 80, category: 'Database', icon: Database },
+  { name: 'MongoDB / NoSQL', level: 75, category: 'Database', icon: Database },
   { name: 'Docker / Compose', level: 75, category: 'DevOps', icon: Terminal },
   { name: 'Git & Cloud Deploy', level: 80, category: 'DevOps', icon: Terminal }
 ];

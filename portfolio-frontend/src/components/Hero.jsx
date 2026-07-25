@@ -8,7 +8,7 @@ export default function Hero() {
 
   useEffect(() => {
     let timer;
-    const fullText = "Fresher .NET Developer";
+    const fullText = "Fresher Backend Developer";
 
     if (isDeleting) {
       if (displayText.length > 0) {
@@ -115,7 +115,7 @@ export default function Hero() {
               transition={{ delay: 0.6 }}
               className="text-slate-400 max-w-2xl leading-relaxed text-sm md:text-base"
             >
-              Sinh viên năm cuối ngành Kỹ thuật phần mềm tại <b>HUTECH (GPA: 3.43)</b>. Chuyên môn hóa thiết kế hệ thống Backend hiệu năng cao dùng <b>ASP.NET Core (.NET 9)</b>, kiến trúc Clean Architecture, microservices Docker, và tích hợp các giải pháp AI thông minh.
+              Đam mê phát triển hệ thống <b>Backend</b> với kinh nghiệm thực tiễn vững chắc về <b>ASP.NET Core (.NET 9)</b> và <b>Node.js</b>. Sở hữu nền tảng tốt về xây dựng RESTful API, tối ưu hóa cơ sở dữ liệu SQL/NoSQL, áp dụng nguyên lý OOP, SOLID, kiến trúc Clean Architecture và viết Unit Testing. Luôn sẵn sàng đóng góp phát triển sản phẩm, cộng tác hiệu quả trong các dự án Agile và không ngừng cập nhật các công nghệ backend hiện đại.
             </motion.p>
 
             {/* CTA Actions */}

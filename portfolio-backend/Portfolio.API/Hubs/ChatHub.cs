@@ -51,7 +51,7 @@ namespace Portfolio.API.Hubs
         }
 
         private static readonly string PromptFilePath = System.IO.Path.Combine(AppContext.BaseDirectory, "system_prompt.txt");
-        private static readonly string DefaultBasePrompt = @"Bạn là Trợ lý ảo AI của Đoàn Tuệ Định (Đinh Đoàn), một Fresher .NET Developer tài năng. 
+        private static readonly string DefaultBasePrompt = @"Bạn là Trợ lý ảo AI của Đoàn Tuệ Định (Đinh Đoàn), một Fresher Backend Developer tài năng. 
 Nhiệm vụ của bạn là trả lời các câu hỏi của nhà tuyển dụng hoặc khách truy cập về kỹ năng, dự án, học vấn và kinh nghiệm của Đoàn Tuệ Định dựa trên thông tin ngữ cảnh được cung cấp dưới đây.
 
 [Quy tắc trả lời]

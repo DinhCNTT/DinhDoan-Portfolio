@@ -41,6 +41,19 @@ const projectsData = [
     problem: '• Hệ thống quản lý và xử lý văn bản yêu cầu tính năng phân quyền bảo mật chặt chẽ cho nhiều nhóm cộng tác viên khác nhau.\n• Ngăn chặn triệt để các lỗ hổng bảo mật như tấn công XSS và SQL Injection vào nội dung tài liệu.\n• Đồng bộ dữ liệu văn bản giữa Client và Server nhanh chóng, mượt mà.',
     solution: '• Xây dựng REST API bằng Express.js sử dụng kiến trúc MVC phân lớp rõ ràng.\n• Thiết kế schema MongoDB tối ưu với chỉ mục tìm kiếm toàn văn bản (Text Search).\n• Bảo mật hệ thống bằng JWT (HttpOnly Cookie) chống tấn công XSS, mã hóa bcrypt mật khẩu với salt rounds = 10, và dùng thư viện Helmet gia cố các HTTP Headers an toàn.',
     result: '• Hoàn thành xuất sắc dự án thực tập, được đánh giá cao về độ ổn định và tính bảo mật (chống phân quyền sai sót 100%).\n• Triển khai thực tế chạy ổn định trên nền tảng Vercel.'
+  },
+  {
+    id: 'soundspace',
+    title: 'SoundSpace',
+    category: 'Node.js',
+    description: 'Nền tảng nghe nhạc cộng tác thời gian thực tích hợp hệ thống phát nhạc đồng bộ và cơ chế fallback âm thanh thông minh.',
+    tags: ['Node.js', 'Express.js', 'React 19', 'Socket.IO', 'MongoDB', 'Mongoose', 'LRU Cache', 'Cloudinary', 'node-schedule'],
+    imageUrl: '/images/soundspace.png',
+    githubUrl: 'https://github.com/DinhCNTT/soundspace-web',
+    liveUrl: '',
+    problem: '• Cần giảm thiểu thời gian trễ và gián đoạn (buffering) khi phát âm thanh từ YouTube thông qua server.\n• Đảm bảo đồng bộ hóa trạng thái phát nhạc (play, pause, seek) thời gian thực cho hơn 50+ người nghe đồng thời trong cùng một phòng.\n• Tối ưu hóa hiệu năng API backend và bộ đệm để hạn chế truy vấn lặp lại đến cơ sở dữ liệu khi xác thực phòng.\n• Dọn dẹp tự động tệp tin tạm thời và tài nguyên mồ côi trên Cloudinary để tối ưu chi phí lưu trữ.',
+    solution: '• Triển khai hệ thống phát nhạc kép (dual-engine audio fallback) kết hợp ytdl-core và yt-dlp CLI cùng với LRU Cache để lưu trữ tạm các luồng audio.\n• Sử dụng Socket.IO để xây dựng kênh giao tiếp thời gian thực, đồng bộ hóa trạng thái phát nhạc giữa host và listeners.\n• Di chuyển các tác vụ database không quan trọng (ghi log, lưu vết) thành các background job bất đồng bộ.\n• Xây dựng in-memory access-control cache có thời gian hết hạn (expiration) cho các phòng công cộng và phòng có mã PIN.\n• Cài đặt cơ chế cleanup hướng sự kiện (event-driven cleanup) bằng node-schedule để tự động xóa tệp thừa.',
+    result: '• Giảm thời gian buffering âm thanh từ ~3 giây xuống còn 0.5 giây trong môi trường thử nghiệm.\n• Hỗ trợ ổn định trên 50+ listeners đồng thời mỗi phòng mà không bị lệch pha playback.\n• Giảm thời gian phản hồi API khi tham gia phòng (room-join response time) từ ~1.8 giây xuống còn 250ms.\n• Tối ưu chỉ mục truy vấn phòng và giải phóng dung lượng lưu trữ Cloudinary tự động.'
   }
 ];
 
@@ -49,6 +62,85 @@ export default function Projects() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [activeProjectDetails, setActiveProjectDetails] = useState(null);
   const [projects, setProjects] = useState(projectsData);
+  const [activeTab, setActiveTab] = useState('overview');
+
+  const getProjectMetrics = (title) => {
+    const normTitle = title.toLowerCase();
+    if (normTitle.includes('unimarket')) {
+      return [
+        { label: 'Gợi ý sản phẩm', value: '< 45ms', desc: 'Thời gian phản hồi thực tế' },
+        { label: 'AI Chatbot stream', value: '< 200ms', desc: 'Token phản hồi đầu tiên' },
+        { label: 'Tải DB chính', value: '- 95%', desc: 'Giảm tải nhờ Redis Cache' },
+        { label: 'Khả năng chịu tải', value: '+ 300%', desc: 'Tăng cường hiệu năng API' }
+      ];
+    }
+    if (normTitle.includes('techgearshop')) {
+      return [
+        { label: 'Lỗi Overselling', value: '0 Lỗi (100%)', desc: 'Khắc phục hoàn toàn kiểm kho' },
+        { label: 'Tải DB thanh toán', value: '- 80%', desc: 'Nhờ hàng đợi ngầm Channels' },
+        { label: 'Tốc độ xuất báo cáo', value: 'Tăng 5x', desc: 'Xử lý file Excel dung lượng lớn' },
+        { label: 'Xuất file 50k dòng', value: '< 2s', desc: 'Hiệu suất xử lý EPPlus' }
+      ];
+    }
+    if (normTitle.includes('soundspace')) {
+      return [
+        { label: 'Độ trễ âm thanh', value: '0.5 giây', desc: 'Giảm từ 3s nhờ dual-engine' },
+        { label: 'Đồng bộ realtime', value: '50+ user', desc: 'Listeners đồng thời mỗi phòng' },
+        { label: 'Room-join API', value: '250 ms', desc: 'Giảm từ 1.8s (tác vụ chạy ngầm)' },
+        { label: 'Dọn dẹp tự động', value: 'Cloudinary', desc: 'Xóa media mồ côi tự động' }
+      ];
+    }
+    return [
+      { label: 'Phân quyền bảo mật', value: '100% An toàn', desc: 'Chống phân quyền sai sót' },
+      { label: 'Bảo mật Client', value: 'HttpOnly JWT', desc: 'Chống tấn công XSS & CSRF' },
+      { label: 'Mã hóa mật khẩu', value: 'bcrypt (s=10)', desc: 'Thuật toán mã hóa an toàn' },
+      { label: 'Chỉ mục tìm kiếm', value: 'Text Search', desc: 'Tối ưu hóa truy vấn MongoDB' }
+    ];
+  };
+
+  const renderBulletPoints = (text, type) => {
+    if (!text) return null;
+    const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+    
+    return (
+      <ul className="grid grid-cols-1 gap-3">
+        {lines.map((line, idx) => {
+          const cleanLine = line.replace(/^[•\-\*]\s*/, '');
+          
+          let Icon = ChevronRight;
+          let iconColor = 'text-slate-400';
+          let borderTheme = 'border-white/5 hover:border-slate-800 bg-white/5';
+          
+          if (type === 'problem') {
+            Icon = HelpCircle;
+            iconColor = 'text-rose-400';
+            borderTheme = 'border-rose-500/10 hover:border-rose-500/30 bg-rose-500/5';
+          } else if (type === 'solution') {
+            Icon = ToggleLeft;
+            iconColor = 'text-cyan-400';
+            borderTheme = 'border-cyan-500/10 hover:border-cyan-500/30 bg-[#06b6d4]/5';
+          } else if (type === 'result') {
+            Icon = CheckCircle;
+            iconColor = 'text-emerald-400';
+            borderTheme = 'border-emerald-500/10 hover:border-emerald-500/30 bg-emerald-500/5';
+          }
+          
+          return (
+            <motion.li 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
+              key={idx} 
+              className={`flex gap-3 p-4 rounded-xl border ${borderTheme} transition-all duration-300`}
+            >
+              <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${iconColor}`} />
+              <span className="text-slate-300 text-sm leading-relaxed">{cleanLine}</span>
+            </motion.li>
+          );
+        })}
+      </ul>
+    );
+  };
 
   useEffect(() => {
     const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -211,7 +303,7 @@ export default function Projects() {
 
                     {/* PSR Detail toggle */}
                     <button
-                      onClick={() => setActiveProjectDetails(project)}
+                      onClick={() => { setActiveProjectDetails(project); setActiveTab('overview'); }}
                       className="inline-flex items-center gap-1 text-xs font-outfit font-bold text-cyber-accent2 hover:text-cyber-accent3 transition-colors group-hover:underline"
                     >
                       CHI TIẾT PSR
@@ -243,79 +335,190 @@ export default function Projects() {
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="w-full max-w-2xl bg-[#0b0f19] border border-cyber-accent2/30 rounded-2xl overflow-hidden relative shadow-[0_0_50px_rgba(168,85,247,0.2)]"
+              className="w-full max-w-2xl bg-[#0b0f19] border border-cyber-accent2/30 rounded-2xl overflow-hidden relative shadow-[0_0_50px_rgba(168,85,247,0.2)] flex flex-col max-h-[85vh]"
             >
               {/* Header */}
-              <div className="p-6 border-b border-white/5 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-cyber-accent2 animate-pulse" />
-                  <h3 className="font-outfit font-bold text-lg text-white">
-                    {activeProjectDetails.title} (PSR ANALYTICS)
-                  </h3>
+              <div className="p-5 border-b border-white/5 flex items-center justify-between bg-[#080d16]/90 backdrop-blur-md shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-2.5 h-2.5 rounded-full bg-cyber-accent2 animate-pulse" />
+                  <div>
+                    <h3 className="font-outfit font-black text-lg text-white uppercase tracking-wide leading-none">
+                      {activeProjectDetails.title}
+                    </h3>
+                    <p className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-1">
+                      PSR Analytics Dashboard
+                    </p>
+                  </div>
                 </div>
-                <button
-                  onClick={() => setActiveProjectDetails(null)}
-                  className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+
+                <div className="flex items-center gap-3">
+                  <a
+                    href={activeProjectDetails.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/5 transition-all flex items-center gap-1 text-[10px] font-outfit font-extrabold tracking-wider"
+                  >
+                    <Github className="w-3.5 h-3.5" />
+                    <span>CODE</span>
+                  </a>
+                  {activeProjectDetails.liveUrl && (
+                    <a
+                      href={activeProjectDetails.liveUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-1.5 rounded-lg bg-cyber-accent2/10 hover:bg-cyber-accent2/20 text-cyber-accent2 border border-cyber-accent2/20 hover:border-cyber-accent2/40 transition-all flex items-center gap-1 text-[10px] font-outfit font-extrabold tracking-wider shadow-[0_0_10px_rgba(168,85,247,0.1)]"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>DEMO</span>
+                    </a>
+                  )}
+                  <button
+                    onClick={() => setActiveProjectDetails(null)}
+                    className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors ml-1"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
 
-              {/* Scrollable details */}
-              <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6">
-                {/* Image & Tech Stack */}
-                <div className="relative aspect-video rounded-xl overflow-hidden mb-4">
-                  <img 
-                    src={activeProjectDetails.imageUrl} 
-                    alt={activeProjectDetails.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/20 to-transparent" />
-                </div>
+              {/* Navigation Tabs */}
+              <div className="flex border-b border-white/5 bg-[#080d16]/50 px-5 shrink-0 overflow-x-auto scrollbar-none">
+                {[
+                  { id: 'overview', name: 'OVERVIEW & KPI' },
+                  { id: 'challenge', name: 'CHALLENGE & SOLUTION' },
+                  { id: 'results', name: 'IMPACT & RESULTS' }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`py-3 px-3 text-[10px] font-outfit font-extrabold tracking-widest border-b-2 transition-all relative whitespace-nowrap ${
+                      activeTab === tab.id
+                        ? 'border-cyber-accent2 text-cyber-accent2 font-black'
+                        : 'border-transparent text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    {tab.name}
+                    {activeTab === tab.id && (
+                      <motion.div
+                        layoutId="activeModalTab"
+                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-cyber-accent2"
+                      />
+                    )}
+                  </button>
+                ))}
+              </div>
 
-                <div className="flex flex-wrap gap-1.5">
-                  {activeProjectDetails.tags.map(tag => (
-                    <span key={tag} className="px-2.5 py-1 rounded-md bg-white/5 border border-white/5 text-xs text-slate-300">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* PSR Grid */}
-                <div className="space-y-5">
-                  {/* Problem */}
-                  <div className="p-4 rounded-xl border border-rose-500/10 bg-rose-500/5">
-                    <div className="flex items-center gap-2 text-rose-400 font-outfit font-extrabold text-sm mb-2">
-                      <HelpCircle className="w-4.5 h-4.5" />
-                      PROBLEM / VẤN ĐỀ ĐẶT RA
+              {/* Scrollable details container */}
+              <div className="p-6 overflow-y-auto flex-1 space-y-6 bg-[#0b0f19] scrollbar-thin">
+                {activeTab === 'overview' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-6"
+                  >
+                    {/* Image */}
+                    <div className="relative aspect-video rounded-xl overflow-hidden border border-white/5 shadow-inner">
+                      <img 
+                        src={activeProjectDetails.imageUrl} 
+                        alt={activeProjectDetails.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent" />
                     </div>
-                    <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-line">
-                      {activeProjectDetails.problem}
-                    </p>
-                  </div>
 
-                  {/* Solution */}
-                  <div className="p-4 rounded-xl border border-cyber-accent1/10 bg-cyber-accent1/5">
-                    <div className="flex items-center gap-2 text-cyber-accent1 font-outfit font-extrabold text-sm mb-2">
-                      <ToggleLeft className="w-4.5 h-4.5" />
-                      SOLUTION / GIẢI PHÁP THỰC HIỆN
+                    {/* Summary description */}
+                    <div className="p-4 rounded-xl border border-white/5 bg-[#0e1424]/40">
+                      <p className="text-slate-300 text-sm leading-relaxed">
+                        {activeProjectDetails.description}
+                      </p>
                     </div>
-                    <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-line">
-                      {activeProjectDetails.solution}
-                    </p>
-                  </div>
 
-                  {/* Result */}
-                  <div className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-500/5">
-                    <div className="flex items-center gap-2 text-emerald-400 font-outfit font-extrabold text-sm mb-2">
-                      <CheckCircle className="w-4.5 h-4.5" />
-                      RESULT / KẾT QUẢ ĐẠT ĐƯỢC
+                    {/* KPI Metrics Dashboard Grid */}
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-outfit font-extrabold tracking-[0.15em] text-cyber-accent1 uppercase">
+                        // CORE PERFORMANCE METRICS
+                      </h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        {getProjectMetrics(activeProjectDetails.title).map((metric, idx) => (
+                          <div 
+                            key={idx}
+                            className="p-3.5 rounded-xl border border-white/5 bg-[#0e1424]/60 hover:border-cyber-accent1/20 transition-all duration-300 hover:shadow-[0_0_15px_rgba(6,182,212,0.05)] flex flex-col justify-between"
+                          >
+                            <span className="text-[10px] font-outfit font-extrabold tracking-wider text-slate-400 uppercase">
+                              {metric.label}
+                            </span>
+                            <span className="text-xl font-black font-mono text-cyber-accent1 mt-1.5 drop-shadow-[0_0_6px_rgba(6,182,212,0.3)]">
+                              {metric.value}
+                            </span>
+                            <span className="text-[10px] text-slate-500 mt-1 leading-normal">
+                              {metric.desc}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-line">
-                      {activeProjectDetails.result}
-                    </p>
-                  </div>
-                </div>
+
+                    {/* Technologies tags */}
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-outfit font-extrabold tracking-[0.15em] text-slate-400 uppercase">
+                        // TECH STACK DEPLOYED
+                      </h4>
+                      <div className="flex flex-wrap gap-1.5">
+                        {activeProjectDetails.tags.map(tag => (
+                          <span key={tag} className="px-2.5 py-1 rounded bg-white/5 border border-white/5 text-[10px] font-semibold text-slate-300">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {activeTab === 'challenge' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-6"
+                  >
+                    {/* Problem Section */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-rose-400 font-outfit font-black text-xs tracking-wider uppercase">
+                        <HelpCircle className="w-4.5 h-4.5" />
+                        PROBLEM / THỬ THÁCH & VẤN ĐỀ ĐẶT RA
+                      </div>
+                      {renderBulletPoints(activeProjectDetails.problem, 'problem')}
+                    </div>
+
+                    {/* Solution Section */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-cyan-400 font-outfit font-black text-xs tracking-wider uppercase">
+                        <ToggleLeft className="w-4.5 h-4.5" />
+                        SOLUTION / GIẢI PHÁP & KIẾN TRÚC TRIỂN KHAI
+                      </div>
+                      {renderBulletPoints(activeProjectDetails.solution, 'solution')}
+                    </div>
+                  </motion.div>
+                )}
+
+                {activeTab === 'results' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-4"
+                  >
+                    {/* Result Section */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-emerald-400 font-outfit font-black text-xs tracking-wider uppercase">
+                        <CheckCircle className="w-4.5 h-4.5" />
+                        RESULT / HIỆU QUẢ ĐO LƯỜNG THỰC TẾ
+                      </div>
+                      {renderBulletPoints(activeProjectDetails.result, 'result')}
+                    </div>
+                  </motion.div>
+                )}
               </div>
             </motion.div>
           </div>
