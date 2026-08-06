@@ -11,6 +11,9 @@ import ChatbotWidget from './components/ChatbotWidget';
 import AdminDashboard from './components/AdminDashboard';
 import Loader from './components/Loader';
 import CyberBackground from './components/CyberBackground';
+import StatsCounter from './components/StatsCounter';
+import Testimonials from './components/Testimonials';
+import ContactSection from './components/ContactSection';
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -79,6 +82,9 @@ function App() {
           {/* Hero Banner Section */}
           <Hero />
 
+          {/* Stats Counter Section */}
+          <StatsCounter />
+
           {/* Dynamic Skills Grid Section */}
           <Skills />
 
@@ -90,10 +96,27 @@ function App() {
 
           {/* Education & Achievements Section */}
           <Education />
+
+          {/* Testimonials Review Section */}
+          <Testimonials />
+
+          {/* Contact Section */}
+          <ContactSection />
         </main>
 
         {/* Chat Assistant Widget */}
         <ChatbotWidget />
+
+        {/* Zalo Floating Button - Aligned perfectly with AI Chatbox (right-6, w-14 h-14) */}
+        <a 
+          href="https://zalo.me/0842070552"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-24 right-6 z-50 flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-full shadow-[0_0_15px_rgba(37,99,235,0.6)] hover:scale-110 hover:shadow-[0_0_25px_rgba(37,99,235,0.8)] transition-all duration-300"
+          aria-label="Liên hệ Zalo"
+        >
+          <span className="font-bold text-base md:text-lg font-jakarta">Zalo</span>
+        </a>
 
         {/* Page Footer */}
         <Footer />

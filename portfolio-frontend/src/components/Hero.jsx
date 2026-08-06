@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { MessageSquare, ArrowRight, Github, Linkedin, Award, BookOpen, Briefcase } from 'lucide-react';
 
 export default function Hero() {
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Parallax background scroll effects
+  const { scrollY } = useScroll();
+  const yBg = useTransform(scrollY, [0, 500], [0, 100]);
+  const yText = useTransform(scrollY, [0, 500], [0, -30]);
 
   useEffect(() => {
     let timer;
@@ -16,7 +21,6 @@ export default function Hero() {
           setDisplayText(fullText.substring(0, displayText.length - 1));
         }, 50);
       } else {
-        // Finished deleting, wait 500ms then start typing
         timer = setTimeout(() => {
           setIsDeleting(false);
         }, 500);
@@ -27,7 +31,6 @@ export default function Hero() {
           setDisplayText(fullText.substring(0, displayText.length + 1));
         }, 100);
       } else {
-        // Finished typing, wait 2000ms then start deleting
         timer = setTimeout(() => {
           setIsDeleting(true);
         }, 2000);
@@ -37,6 +40,27 @@ export default function Hero() {
     return () => clearTimeout(timer);
   }, [displayText, isDeleting]);
 
+  // Framer Motion entry variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 25, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
+
   return (
     <section 
       id="home" 
@@ -45,61 +69,62 @@ export default function Hero() {
       {/* Background Radial Glow */}
       <div className="absolute inset-0 bg-radial-glow pointer-events-none z-0" />
 
-      {/* Futuristic SVG background elements */}
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-10">
+      {/* Futuristic SVG background elements with Parallax scroll */}
+      <motion.div 
+        style={{ y: yBg }}
+        className="absolute inset-0 pointer-events-none z-0 opacity-10"
+      >
         <svg width="100%" height="100%">
           <circle cx="20%" cy="30%" r="2" fill="#06b6d4" className="animate-pulse" />
           <circle cx="80%" cy="70%" r="3" fill="#a855f7" className="animate-pulse" />
           <path d="M 0,100 Q 150,150 300,100 T 600,100 T 900,100 T 1200,100" fill="none" stroke="#06b6d4" strokeWidth="1" />
         </svg>
-      </div>
+      </motion.div>
 
       <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
           {/* Left Column: Text & Info */}
-          <div className="lg:col-span-7 text-left space-y-8 flex flex-col items-start order-2 lg:order-1">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            style={{ y: yText }}
+            className="lg:col-span-7 text-left space-y-8 flex flex-col items-start order-2 lg:order-1"
+          >
             
             {/* Status Badge */}
             <motion.div 
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyber-accent1/20 bg-cyber-accent1/5 backdrop-blur-md"
+              variants={itemVariants}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyber-accent1/25 bg-cyber-accent1/5 backdrop-blur-md"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
               <span className="w-2 h-2 rounded-full bg-emerald-500 absolute" />
-              <span className="text-xs font-outfit tracking-wider text-slate-300 font-semibold">
-                READY TO CODE · HO CHI MINH CITY
+              <span className="text-xs font-jakarta tracking-wider text-slate-300 font-extrabold">
+                SẴN SÀNG LÀM VIỆC · TP. HỒ CHÍ MINH
               </span>
             </motion.div>
 
             <div className="space-y-4 w-full">
               {/* Hello Text */}
               <motion.p 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="text-cyber-accent1 font-outfit tracking-widest text-sm md:text-base font-semibold"
+                variants={itemVariants}
+                className="text-cyber-accent1 font-jakarta tracking-widest text-xs sm:text-sm font-extrabold uppercase"
               >
-                SYSTEM.INITIALIZE ( "HELLO_WORLD" );
+                // DEVELOPER.INITIALIZE ( "WELCOME" );
               </motion.p>
 
               {/* Main Name Heading */}
               <motion.h1 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-outfit tracking-tight text-white leading-none animate-glow-text"
+                variants={itemVariants}
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-jakarta tracking-tight text-white leading-none animate-glow-text"
               >
-                ĐOÀN TUỆ <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent1 via-cyber-accent2 to-cyber-accent3 drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]">ĐỊNH</span>
+                ĐOÀN TUỆ <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent1 via-cyber-accent2 to-cyber-accent3 drop-shadow-[0_0_15px_rgba(6,182,212,0.35)]">ĐỊNH</span>
               </motion.h1>
 
               {/* Typing Terminal Text */}
               <motion.div 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
+                variants={itemVariants}
                 className="h-8 flex items-center justify-start font-mono text-slate-400 text-lg md:text-2xl font-bold"
               >
                 <span className="text-cyber-accent1 mr-2">&gt;</span>
@@ -110,19 +135,15 @@ export default function Hero() {
 
             {/* Brief CV Summary */}
             <motion.p 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="text-slate-400 max-w-2xl leading-relaxed text-sm md:text-base"
+              variants={itemVariants}
+              className="text-slate-400 max-w-2xl leading-relaxed text-sm md:text-base font-jakarta font-medium"
             >
               Đam mê phát triển hệ thống <b>Backend</b> với kinh nghiệm thực tiễn vững chắc về <b>ASP.NET Core (.NET 9)</b> và <b>Node.js</b>. Sở hữu nền tảng tốt về xây dựng RESTful API, tối ưu hóa cơ sở dữ liệu SQL/NoSQL, áp dụng nguyên lý OOP, SOLID, kiến trúc Clean Architecture và viết Unit Testing. Luôn sẵn sàng đóng góp phát triển sản phẩm, cộng tác hiệu quả trong các dự án Agile và không ngừng cập nhật các công nghệ backend hiện đại.
             </motion.p>
 
             {/* CTA Actions */}
             <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.7 }}
+              variants={itemVariants}
               className="flex flex-col sm:flex-row items-center gap-4 pt-2 w-full sm:w-auto"
             >
               <a
@@ -131,10 +152,10 @@ export default function Hero() {
                   e.preventDefault();
                   document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-cyber-accent1/30 bg-cyber-accent1/5 hover:bg-cyber-accent1/10 hover:border-cyber-accent1/60 font-semibold text-sm tracking-wider font-outfit text-cyber-accent1 shadow-[0_0_15px_rgba(6,182,212,0.05)] transition-all hover:scale-105 duration-200 active:scale-95"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-cyber-accent1/30 bg-cyber-accent1/5 hover:bg-cyber-accent1/10 hover:border-cyber-accent1/60 font-extrabold text-sm tracking-wider font-jakarta text-cyber-accent1 shadow-[0_0_15px_rgba(6,182,212,0.05)] transition-all hover:scale-105 duration-200 active:scale-95 animate-glow-pulse-cyan"
               >
                 KHÁM PHÁ DỰ ÁN
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 animate-bounce-horizontal" />
               </a>
 
               <button
@@ -142,7 +163,7 @@ export default function Hero() {
                   const chatbotWidgetBtn = document.getElementById('chatbot-widget-trigger');
                   if (chatbotWidgetBtn) chatbotWidgetBtn.click();
                 }}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-cyber-accent2 to-cyber-accent3 hover:from-purple-600 hover:to-pink-600 font-semibold text-sm tracking-wider font-outfit text-white shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)] transition-all hover:scale-105 duration-200 active:scale-95"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyber-accent2 via-cyber-accent3 to-cyber-accent2 hover:from-purple-600 hover:to-pink-600 font-extrabold text-sm tracking-wider font-jakarta text-white shadow-[0_0_20px_rgba(168,85,247,0.35)] hover:shadow-[0_0_30px_rgba(168,85,247,0.55)] transition-all hover:scale-105 duration-200 active:scale-95 animate-glow-pulse-purple"
               >
                 CHAT VỚI AI CLONE
                 <MessageSquare className="w-4 h-4" />
@@ -151,45 +172,41 @@ export default function Hero() {
 
             {/* Social Links */}
             <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
+              variants={itemVariants}
               className="flex items-center gap-5 pt-2 text-slate-400"
             >
-              <a href="https://github.com/DinhCNTT" target="_blank" rel="noreferrer" className="hover:text-cyber-accent1 transition-colors hover:scale-110 duration-200">
+              <a href="https://github.com/DinhCNTT" target="_blank" rel="noreferrer" className="hover:text-cyber-accent1 transition-colors hover:scale-110 duration-200" title="GitHub">
                 <Github className="w-5 h-5" />
               </a>
-              <a href="https://linkedin.com/in/doantuedinh" target="_blank" rel="noreferrer" className="hover:text-cyber-accent2 transition-colors hover:scale-110 duration-200">
+              <a href="https://linkedin.com/in/doantuedinh" target="_blank" rel="noreferrer" className="hover:text-cyber-accent2 transition-colors hover:scale-110 duration-200" title="LinkedIn">
                 <Linkedin className="w-5 h-5" />
               </a>
             </motion.div>
 
             {/* Mini stats grid */}
             <motion.div 
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.9 }}
+              variants={itemVariants}
               className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-6 w-full"
             >
-              <div className="p-4 rounded-xl border border-white/5 bg-cyber-card backdrop-blur-md flex flex-col items-center justify-center animate-cyber-float">
+              <div className="p-4 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md flex flex-col items-center justify-center hover:border-cyber-accent1/20 transition-all duration-300">
                 <BookOpen className="w-5 h-5 text-cyber-accent1 mb-1.5" />
-                <span className="text-[10px] text-slate-400 tracking-wider font-semibold font-outfit mb-0.5 uppercase">HUTECH GPA</span>
-                <span className="text-base sm:text-lg font-bold font-outfit text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">3.43 / 4.0</span>
+                <span className="text-[10px] text-slate-400 tracking-wider font-extrabold font-jakarta mb-0.5 uppercase">HUTECH GPA</span>
+                <span className="text-base sm:text-lg font-extrabold font-jakarta text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.15)]">3.43 / 4.0</span>
               </div>
 
-              <div className="p-4 rounded-xl border border-white/5 bg-cyber-card backdrop-blur-md flex flex-col items-center justify-center animate-cyber-float-reverse">
+              <div className="p-4 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md flex flex-col items-center justify-center hover:border-cyber-accent2/20 transition-all duration-300">
                 <Award className="w-5 h-5 text-cyber-accent2 mb-1.5" />
-                <span className="text-[10px] text-slate-400 tracking-wider font-semibold font-outfit mb-0.5 uppercase">THÀNH TÍCH</span>
-                <span className="text-[11px] font-bold text-center font-outfit text-white leading-tight uppercase">OUTSTANDING STUDENT</span>
+                <span className="text-[10px] text-slate-400 tracking-wider font-extrabold font-jakarta mb-0.5 uppercase">THÀNH TÍCH</span>
+                <span className="text-[11px] font-extrabold text-center font-jakarta text-white leading-tight uppercase">OUTSTANDING STUDENT</span>
               </div>
 
-              <div className="p-4 col-span-2 sm:col-span-1 rounded-xl border border-white/5 bg-cyber-card backdrop-blur-md flex flex-col items-center justify-center animate-cyber-float">
+              <div className="p-4 col-span-2 sm:col-span-1 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md flex flex-col items-center justify-center hover:border-cyber-accent3/20 transition-all duration-300">
                 <Briefcase className="w-5 h-5 text-cyber-accent3 mb-1.5" />
-                <span className="text-[10px] text-slate-400 tracking-wider font-semibold font-outfit mb-0.5 uppercase">KỲ THỰC TẬP</span>
-                <span className="text-xs sm:text-sm font-bold font-outfit text-white uppercase">CYBERSOFT INTERN</span>
+                <span className="text-[10px] text-slate-400 tracking-wider font-extrabold font-jakarta mb-0.5 uppercase">KỲ THỰC TẬP</span>
+                <span className="text-xs sm:text-sm font-extrabold font-jakarta text-white uppercase">CYBERSOFT INTERN</span>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
           
           {/* Right Column: Avatar HUD Container */}
           <div className="lg:col-span-5 flex justify-center items-center order-1 lg:order-2">
@@ -202,14 +219,14 @@ export default function Hero() {
               {/* Glowing backdrop */}
               <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-cyber-accent1/10 to-cyber-accent2/10 blur-3xl pointer-events-none" />
 
-              {/* Outer rotating cyber ring */}
-              <div className="absolute inset-0 rounded-full border-2 border-dashed border-cyber-accent1/20 animate-[spin_50s_linear_infinite]" />
+              {/* Outer static cyber ring */}
+              <div className="absolute inset-0 rounded-full border-2 border-dashed border-cyber-accent1/20" />
 
-              {/* Inner rotating cyber ring (different direction, different speed) */}
-              <div className="absolute inset-3 rounded-full border border-dashed border-cyber-accent2/20 animate-[spin_30s_linear_infinite_reverse]" />
+              {/* Inner static cyber ring */}
+              <div className="absolute inset-3 rounded-full border border-dashed border-cyber-accent2/20" />
 
               {/* Main Avatar Wrapper with glowing border */}
-              <div className="absolute inset-7 rounded-full border border-white/10 bg-black/40 backdrop-blur-md p-1.5 shadow-[0_0_30px_rgba(6,182,212,0.1)] hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] transition-all duration-500 group animate-cyber-float">
+              <div className="absolute inset-7 rounded-full border border-white/10 bg-black/40 backdrop-blur-md p-1.5 shadow-[0_0_30px_rgba(6,182,212,0.1)] hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] transition-all duration-500 group">
                 
                 {/* Inner decorative neon ring */}
                 <div className="absolute inset-1 rounded-full border border-transparent bg-gradient-to-tr from-cyber-accent1 via-transparent to-cyber-accent2 opacity-40 group-hover:opacity-100 transition-opacity duration-500" />

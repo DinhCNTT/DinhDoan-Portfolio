@@ -6,14 +6,13 @@ const experiences = [
   {
     role: 'Backend Engineering Intern',
     company: 'CyberSoft',
-    period: '20/04/2026 – 20/06/2026',
-    description: 'Thực tập sinh phát triển hệ thống API Backend, xây dựng các giải pháp lưu trữ dữ liệu hiệu quả và cấu hình các cơ chế bảo mật.',
+    period: '20/02/2026 – 20/06/2026',
+    description: 'Thực tập sinh phát triển hệ thống API Backend, xây dựng các giải pháp bất đồng bộ, RAG Search Engine và tích hợp công cụ giám sát hiệu năng.',
     points: [
-      'Xây dựng các REST API có khả năng mở rộng tốt bằng Node.js & Express.js dựa trên kiến trúc MVC chuẩn mực.',
-      'Thiết kế và tối ưu hóa NoSQL schema trong MongoDB (sử dụng Mongoose) giúp lưu trữ và truy vấn dữ liệu hiệu suất cao.',
-      'Triển khai các cơ chế bảo mật và phân quyền truy cập nâng cao sử dụng JSON Web Token (JWT) và thuật toán mã hóa bcrypt.',
-      'Quản lý source code qua Git, phối hợp nhóm hiệu quả và đồng bộ hóa mượt mà các API Backend với ứng dụng React Client.',
-      'Xây dựng và triển khai thực tế ứng dụng Clean Text Workspace lên nền tảng đám mây Vercel.'
+      'Thiết kế và phát triển thành công 11 RESTful API thực tế trên 6 module cốt lõi sử dụng BullMQ, Redis, SSE và Docker Compose, cho phép xử lý dữ liệu bất đồng bộ và theo dõi trạng thái tác vụ thời gian thực.',
+      'Xây dựng công cụ tìm kiếm RAG hoàn chỉnh (production-ready) sử dụng vector embeddings của Gemini/OpenAI, vector database Pinecone và truy xuất ngữ nghĩa (semantic retrieval) cho hệ thống Q&A tài liệu bằng AI.',
+      'Tăng cường bảo mật hệ thống backend bằng cơ chế xác thực JWT hai lớp, mã hóa mật khẩu bcrypt và giới hạn tần suất yêu cầu (rate limiting) bằng Redis nhằm bảo vệ các API khỏi truy cập trái phép và lưu lượng spam độc hại.',
+      'Triển khai hệ thống giám sát thực tế (production monitoring) tích hợp Prometheus, Grafana và cấu hình cảnh báo tự động qua Telegram, duy trì thời gian hoạt động của dịch vụ (uptime) đạt mức 99.8%.'
     ],
     github: 'https://github.com/DinhCNTT/clean-text-workspace',
     demo: 'https://clean-text-workspace.vercel.app'
@@ -25,13 +24,19 @@ export default function Experience() {
     <section id="experience" className="py-24 relative overflow-hidden bg-transparent border-t border-white/5">
       <div className="absolute top-1/2 left-10 w-96 h-96 rounded-full bg-cyber-accent1/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto px-4 md:px-8 relative z-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="max-w-4xl mx-auto px-4 md:px-8 relative z-10"
+      >
         {/* Section Title */}
         <div className="text-center space-y-3 mb-16">
-          <h2 className="text-xs font-outfit font-extrabold tracking-[0.2em] text-cyber-accent1 uppercase">
+          <h2 className="text-xs font-jakarta font-extrabold tracking-[0.2em] text-cyber-accent1 uppercase">
             // CAREER.PATHWAY
           </h2>
-          <h3 className="text-3xl md:text-4xl font-extrabold font-outfit text-white">
+          <h3 className="text-3xl md:text-4xl font-extrabold font-jakarta text-white">
             KINH NGHIỆM LÀM VIỆC
           </h3>
           <div className="w-16 h-1 bg-gradient-to-r from-cyber-accent1 to-cyber-accent2 mx-auto rounded" />
@@ -54,36 +59,39 @@ export default function Experience() {
                 <div className="w-2 h-2 rounded-full bg-cyber-accent1 absolute" />
               </div>
 
-              {/* Timeline Card */}
-              <div className="p-6 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md relative group hover:border-cyber-accent1/30 transition-all duration-300">
+              {/* Timeline Card with hover scaling and shadows */}
+              <motion.div 
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="p-6 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md relative group hover:border-cyber-accent1/35 hover:shadow-[0_10px_30px_rgba(6,182,212,0.08)] transition-all duration-300"
+              >
                 {/* Visual Accent */}
                 <div className="absolute top-0 left-0 w-12 h-[2px] bg-gradient-to-r from-cyber-accent1 to-transparent" />
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                   <div>
-                    <h4 className="text-xl font-bold text-white group-hover:text-cyber-accent1 transition-colors">
+                    <h4 className="text-xl font-bold text-white group-hover:text-cyber-accent1 transition-colors font-jakarta">
                       {exp.role}
                     </h4>
                     <div className="flex items-center gap-2 text-slate-400 text-sm mt-1">
                       <Briefcase className="w-4 h-4 text-cyber-accent1" />
-                      <span className="font-semibold text-slate-300">{exp.company}</span>
+                      <span className="font-semibold text-slate-300 font-jakarta">{exp.company}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 text-xs font-outfit font-semibold text-slate-400 bg-white/5 border border-white/5 px-3 py-1.5 rounded-lg w-fit">
+                  <div className="flex items-center gap-1.5 text-xs font-jakarta font-bold text-slate-400 bg-white/5 border border-white/5 px-3 py-1.5 rounded-lg w-fit">
                     <Calendar className="w-3.5 h-3.5 text-cyber-accent2" />
                     {exp.period}
                   </div>
                 </div>
 
-                <p className="text-slate-300 text-sm mb-4 leading-relaxed font-medium">
+                <p className="text-slate-300 text-sm mb-4 leading-relaxed font-medium font-jakarta">
                   {exp.description}
                 </p>
 
                 {/* Key Accomplishments */}
                 <ul className="space-y-2 mb-6">
                   {exp.points.map((pt, pIdx) => (
-                    <li key={pIdx} className="flex gap-2 text-slate-400 text-sm leading-relaxed">
+                    <li key={pIdx} className="flex gap-2 text-slate-400 text-sm leading-relaxed font-jakarta">
                       <ChevronRight className="w-4 h-4 text-cyber-accent1 shrink-0 mt-0.5" />
                       <span>{pt}</span>
                     </li>
@@ -91,7 +99,7 @@ export default function Experience() {
                 </ul>
 
                 {/* Links for Internship Project */}
-                <div className="flex gap-3 pt-4 border-t border-white/5">
+                <div className="flex gap-3 pt-4 border-t border-white/5 font-jakarta font-bold">
                   <a
                     href={exp.github}
                     target="_blank"
@@ -113,11 +121,11 @@ export default function Experience() {
                     </a>
                   )}
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

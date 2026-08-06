@@ -15,7 +15,8 @@ import {
   Eye,
   Trash2,
   Settings,
-  BarChart3
+  BarChart3,
+  Mail
 } from 'lucide-react';
 import * as signalR from '@microsoft/signalr';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
@@ -39,11 +40,57 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   
-  const [activeTab, setActiveTab] = useState('conversations'); // 'conversations', 'prompt', 'analytics'
+  const [activeTab, setActiveTab] = useState('conversations'); // 'conversations', 'contacts', 'prompt', 'analytics'
   const [systemPrompt, setSystemPrompt] = useState('');
   const [promptLoading, setPromptLoading] = useState(false);
   const [promptSaving, setPromptSaving] = useState(false);
   const [promptMessage, setPromptMessage] = useState({ type: '', text: '' });
+
+  const [contacts, setContacts] = useState([]);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [contactsLoading, setContactsLoading] = useState(false);
+
+  // Fetch Contact Requests
+  const fetchContacts = async () => {
+    if (!token) return;
+    setContactsLoading(true);
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/admin/contacts`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.status === 401) {
+        handleLogout();
+        return;
+      }
+      const data = await res.json();
+      setContacts(data);
+    } catch (err) {
+      console.error("Lỗi fetch danh sách liên hệ:", err);
+    } finally {
+      setContactsLoading(false);
+    }
+  };
+
+  // Delete Contact Request
+  const handleDeleteContact = async (contact) => {
+    if (!token || !window.confirm(`Bạn có chắc chắn muốn xóa đề xuất liên hệ từ ${contact.name}?`)) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/admin/contacts?email=${encodeURIComponent(contact.email)}&createdAt=${encodeURIComponent(contact.createdAt)}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setSelectedContact(null);
+        fetchContacts();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || "Lỗi khi xóa đề xuất liên hệ");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Lỗi kết nối");
+    }
+  };
 
   const connectionRef = useRef(null);
 
@@ -108,6 +155,9 @@ export default function AdminDashboard() {
       });
       const logsData = await logsRes.json();
       setLogs(logsData);
+
+      // 3. Fetch Contact Requests
+      await fetchContacts();
     } catch (err) {
       console.error("Lỗi fetch dữ liệu admin:", err);
     } finally {
@@ -237,6 +287,12 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (activeTab === 'prompt' && token) {
       fetchSystemPrompt();
+    }
+  }, [activeTab, token]);
+
+  useEffect(() => {
+    if (activeTab === 'contacts' && token) {
+      fetchContacts();
     }
   }, [activeTab, token]);
 
@@ -514,6 +570,18 @@ export default function AdminDashboard() {
         </button>
 
         <button
+          onClick={() => setActiveTab('contacts')}
+          className={`px-5 py-3 text-xs font-bold uppercase tracking-widest border-b-2 transition-all flex items-center gap-2 ${
+            activeTab === 'contacts'
+              ? 'border-cyber-accent3 text-cyber-accent3 bg-cyber-accent3/5'
+              : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Mail className="w-4 h-4" />
+          Liên hệ
+        </button>
+
+        <button
           onClick={() => setActiveTab('prompt')}
           className={`px-5 py-3 text-xs font-bold uppercase tracking-widest border-b-2 transition-all flex items-center gap-2 ${
             activeTab === 'prompt'
@@ -718,6 +786,170 @@ export default function AdminDashboard() {
                           </div>
                         );
                       })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {activeTab === 'contacts' && (
+          <motion.div
+            key="contacts"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+          >
+            {/* Left Column: Contacts List */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                  <Terminal className="w-4 h-4 text-cyber-accent3" />
+                  ĐỀ NGHỊ LIÊN HỆ ({contacts.length})
+                </h2>
+                <span className="text-[10px] font-mono text-slate-500">Mới nhất lên đầu</span>
+              </div>
+
+              <div className="rounded-2xl border border-white/5 bg-cyber-card p-2 max-h-[500px] overflow-y-auto space-y-1.5 scrollbar-thin">
+                {contactsLoading ? (
+                  <div className="text-center py-12 text-slate-500 text-xs uppercase tracking-wider font-mono">
+                    Đang tải danh sách liên hệ...
+                  </div>
+                ) : contacts.length === 0 ? (
+                  <div className="text-center py-12 text-slate-500 text-xs uppercase tracking-wider font-mono">
+                    Chưa có đề nghị liên hệ nào
+                  </div>
+                ) : (
+                  contacts.map((contact, idx) => {
+                    const isSelected = selectedContact && selectedContact.email === contact.email && selectedContact.createdAt === contact.createdAt;
+                    const dateText = new Date(contact.createdAt).toLocaleString([], {
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    });
+
+                    return (
+                      <button
+                        key={contact.createdAt + idx}
+                        onClick={() => setSelectedContact(contact)}
+                        className={`w-full text-left p-3.5 rounded-xl border transition-all duration-300 flex items-center justify-between gap-4 group ${
+                          isSelected 
+                            ? 'border-cyber-accent3 bg-cyber-accent3/5 shadow-[0_0_15px_rgba(244,63,94,0.05)]' 
+                            : 'border-transparent bg-white/0 hover:bg-white/5 hover:border-slate-800'
+                        }`}
+                      >
+                        <div className="flex-1 min-w-0 space-y-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-[10px] font-mono font-bold text-cyber-accent3 uppercase tracking-wide truncate max-w-[150px]">
+                              {contact.name}
+                            </span>
+                            <span className="text-[9px] font-mono text-slate-500">
+                              {dateText}
+                            </span>
+                          </div>
+                          
+                          {/* Subject / Message preview */}
+                          <p className="text-xs text-slate-200 font-semibold truncate">
+                            {contact.subject || 'Không có tiêu đề'}
+                          </p>
+                          <p className="text-xs text-slate-400 truncate max-w-[280px]">
+                            {contact.message}
+                          </p>
+                        </div>
+                        <ChevronRight className={`w-4 h-4 text-slate-500 group-hover:text-white transition-colors ${isSelected ? 'text-cyber-accent3' : ''}`} />
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+
+            {/* Right Column: Active Contact Detail */}
+            <div className="lg:col-span-7 space-y-4">
+              <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <Eye className="w-4 h-4 text-cyber-accent3" />
+                CHI TIẾT ĐỀ NGHỊ LIÊN HỆ
+              </h2>
+
+              <div className="rounded-2xl border border-white/5 bg-cyber-card p-6 h-[500px] flex flex-col backdrop-blur-md relative overflow-hidden">
+                {/* Glowing accent border */}
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyber-accent3/20 to-transparent" />
+
+                {!selectedContact ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center space-y-3">
+                    <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-slate-500">
+                      <Mail className="w-6 h-6 animate-pulse" />
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-widest text-slate-400 font-bold">
+                        [CHƯA CHỌN LIÊN HỆ]
+                      </p>
+                      <p className="text-[11px] text-slate-600 mt-1 max-w-xs">
+                        Vui lòng chọn một đề nghị liên hệ từ danh sách bên trái để xem đầy đủ thông tin chi tiết.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex-1 flex flex-col h-full min-h-0 justify-between">
+                    {/* Active Contact Info Header */}
+                    <div className="border-b border-white/5 pb-4 mb-4 flex items-start justify-between gap-4">
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono font-bold text-cyber-accent3 uppercase tracking-widest block">
+                          TÊN: {selectedContact.name}
+                        </span>
+                        <a 
+                          href={`mailto:${selectedContact.email}`}
+                          className="text-xs font-mono text-cyan-400 hover:underline block"
+                          title="Gửi email phản hồi"
+                        >
+                          ✉ {selectedContact.email}
+                        </a>
+                        <h3 className="text-xs text-slate-400">
+                          Thời gian gửi: {new Date(selectedContact.createdAt).toLocaleString()}
+                        </h3>
+                      </div>
+
+                      <button
+                        onClick={() => handleDeleteContact(selectedContact)}
+                        className="px-3 py-1.5 rounded-lg border border-rose-950 bg-rose-950/20 text-rose-400 hover:bg-rose-500 hover:text-white transition-all text-[10px] font-bold flex items-center gap-1.5 shrink-0"
+                        title="Xóa liên hệ này"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        XÓA LIÊN HỆ
+                      </button>
+                    </div>
+
+                    {/* Detailed Message content */}
+                    <div className="flex-1 overflow-y-auto space-y-4 pr-1 scrollbar-thin">
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">TIÊU ĐỀ:</span>
+                        <h4 className="text-sm font-bold text-white leading-relaxed">
+                          {selectedContact.subject || 'Không có tiêu đề đề xuất'}
+                        </h4>
+                      </div>
+
+                      <hr className="border-white/5" />
+
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">NỘI DUNG CHI TIẾT:</span>
+                        <div className="p-4 rounded-xl bg-black/40 border border-white/5 text-xs text-slate-200 leading-relaxed whitespace-pre-wrap font-sans">
+                          {selectedContact.message}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Reply CTA */}
+                    <div className="mt-4 pt-4 border-t border-white/5">
+                      <a
+                        href={`mailto:${selectedContact.email}?subject=Re: ${encodeURIComponent(selectedContact.subject || '')}`}
+                        className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyber-accent3 to-cyber-accent2 hover:from-pink-600 hover:to-purple-600 text-white font-bold text-xs uppercase tracking-widest transition-all hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] flex items-center justify-center gap-2"
+                      >
+                        <Mail className="w-4 h-4" />
+                        PHẢN HỒI QUA EMAIL
+                      </a>
                     </div>
                   </div>
                 )}

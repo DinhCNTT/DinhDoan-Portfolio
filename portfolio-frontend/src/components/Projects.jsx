@@ -5,29 +5,29 @@ import { Github, ExternalLink, Search, HelpCircle, ToggleLeft, CheckCircle, Chev
 const projectsData = [
   {
     id: 'unimarket',
-    title: 'UniMarket',
+    title: 'UniMarket – E-Commerce & Social Network Platform',
     category: '.NET',
-    description: 'Hệ thống thương mại điện tử kết hợp mạng xã hội với kiến trúc microservices containerized.',
-    tags: ['.NET 9', 'EF Core', 'SignalR', 'ML.NET', 'SQL Server', 'MongoDB', 'Docker Compose', 'React 19'],
+    description: 'Hệ thống thương mại điện tử kết hợp mạng xã hội xây dựng trên .NET 9 với kiến trúc microservices containerized.',
+    tags: ['.NET 9 Web API', 'SQL Server', 'MongoDB', 'Docker Compose', 'IMemoryCache', 'SignalR', 'Gemini API', 'React 19'],
     imageUrl: '/images/unimarket.png',
     githubUrl: 'https://github.com/DinhCNTT/unimarket-fullstack',
     liveUrl: 'https://bit.ly/4ul7636',
-    problem: '• Cần xây dựng một hệ thống phân tán chịu tải cao kết hợp mạng xã hội.\n• Giải quyết bài toán gợi ý sản phẩm tự động và tư vấn khách hàng tự động bằng AI.\n• Quản lý trạng thái kết nối thời gian thực (online/offline) của hàng chục ngàn người dùng đồng thời mà không gây nghẽn database chính.',
-    solution: '• Thiết kế hệ thống gồm 6 services containerized bằng Docker Compose, liên lạc qua HTTP REST.\n• Kết hợp linh hoạt SQL Server (dữ liệu transactional) và MongoDB (social network posts).\n• Triển khai thuật toán Matrix Factorization bằng ML.NET để gợi ý sản phẩm cá nhân hóa, tích hợp Google Gemini API cho AI Chatbot.\n• Sử dụng SignalR Hub kết hợp Redis Distributed Cache để lưu tạm trạng thái người dùng bằng cơ chế Heartbeat, giảm tải 95% thao tác đọc ghi DB chính.',
-    result: '• Hệ thống vận hành ổn định trên môi trường Docker. Giao diện tải mượt mà cho 20+ API.\n• Thời gian phản hồi gợi ý sản phẩm cá nhân thực tế chỉ dưới 45ms.\n• AI Chatbot phản hồi token đầu tiên < 200ms thông qua streaming SignalR.\n• Tối ưu hóa chỉ mục (Index) và cache giúp API chịu tải tốt hơn 300%.'
+    problem: 'Role: Backend Developer · Team size: 3 · Mar 2026 – Jun 2026\n• Hệ thống phân tán chịu tải lớn yêu cầu cấu hình môi trường local đơn giản, tối ưu hóa cơ sở dữ liệu trên 170+ API, xử lý ngoại lệ tập trung và tích hợp Chatbot AI tư vấn.',
+    solution: '• Container hóa backend .NET 9 Web API và SQL Server bằng Docker Compose, giúp thiết lập môi trường chạy local nhanh chóng bằng một câu lệnh.\n• Tối ưu hiệu năng cơ sở dữ liệu tại các endpoint có lưu lượng truy cập cao trong backend 170+ API bằng IMemoryCache cho dữ liệu tĩnh và LINQ AsNoTracking cho các truy vấn chỉ đọc.\n• Triển khai theo dõi trạng thái hoạt động (online/offline) thời gian thực bằng SignalR Hubs với cơ chế quản lý kết nối an toàn đa luồng (thread-safe) và BackgroundService để tự động phát hiện ngắt kết nối.\n• Tích hợp Google Gemini API với cơ chế Function Calling để xây dựng chatbot tư vấn sản phẩm thông minh bằng AI, tự động trả lời các câu hỏi thường gặp của khách hàng.\n• Triển khai middleware xử lý ngoại lệ tập trung (centralized exception) để chuẩn hóa phản hồi lỗi JSON, loại bỏ các đoạn mã try-catch trùng lặp trên 32 Services và Repositories.',
+    result: '• Rút ngắn thời gian thiết lập môi trường local xuống tối đa bằng lệnh Docker Compose duy nhất.\n• Giảm tải rõ rệt thời gian phản hồi trung bình nhờ cache và AsNoTracking trên 170+ API.\n• Loại bỏ mã nguồn try-catch dư thừa trên toàn bộ 32 Services/Repositories nhờ xử lý lỗi tập trung.'
   },
   {
     id: 'techgearshop',
-    title: 'TechGearShop',
+    title: 'TechGearShop – E-Commerce & Mini-ERP System',
     category: '.NET',
-    description: 'Hệ thống quản lý bán hàng và ERP mini tích hợp dashboard phân tích dữ liệu admin.',
-    tags: ['ASP.NET MVC 9', 'SQL Server', 'SignalR', 'Channels', 'BackgroundService', 'VNPay API'],
+    description: 'Hệ thống thương mại điện tử nổi bật với tính năng thanh toán đơn hàng tự động, quản lý mã giảm giá khuyến mãi và đồng bộ kho hàng theo thời gian thực.',
+    tags: ['RabbitMQ', 'MassTransit', 'SQL Server', 'SignalR', 'ASP.NET Core', 'VNPay API', 'xUnit', 'Moq'],
     imageUrl: '/images/techgearshop.png',
     githubUrl: 'https://github.com/DinhCNTT/TechGearShop_V1',
     liveUrl: '',
-    problem: '• Trong các đợt mở bán cao điểm, hệ thống cũ gặp lỗi tranh chấp dữ liệu (Race Condition) ở bước check-out thanh toán.\n• Xảy ra hiện tượng Overselling (bán quá số lượng tồn kho thực tế).\n• Thời gian chờ tích hợp VNPay API phản hồi quá lâu khiến người dùng hủy giao dịch.',
-    solution: '• Loại bỏ cơ chế ghi DB đồng bộ trực tiếp khi đặt hàng.\n• Thiết kế bộ đệm hàng đợi (In-memory Queue) bằng System.Threading.Channels, kết hợp BackgroundService chạy ngầm để xử lý đơn hàng tuần tự bất đồng bộ.\n• Áp dụng Database Transactions cách ly mức Serializable ngăn chặn tranh chấp tồn kho.\n• Tích hợp cổng thanh toán VNPay (IPN hash validation) và thư viện EPPlus xuất báo cáo doanh thu/tồn kho ra Excel.',
-    result: '• Khắc phục hoàn toàn 100% lỗi Overselling và Race Condition trong kiểm kho.\n• Tải của database chính giảm 80% nhờ xử lý xếp hàng ngầm.\n• Tốc độ xuất báo cáo admin tăng gấp 5 lần (xử lý file 50,000 dòng chỉ mất chưa đầy 2 giây).'
+    problem: 'Role: Full-stack Developer (Backend Focused) · Team size: solo · Mar 2026 – Jun 2026\n• Hệ thống yêu cầu xử lý đặt hàng nhanh chóng, quản lý mã giảm giá phức tạp và đồng bộ kho hàng theo thời gian thực (real-time).',
+    solution: '• Tối ưu thời gian phản hồi checkout từ 150ms xuống 60ms thông qua RabbitMQ và MassTransit, xử lý bất đồng bộ đặt hàng và thông báo tồn kho.\n• Giảm 90% thao tác ghi database bằng in-memory buffering, đồng bộ lượt xem sản phẩm xuống SQL Server mỗi 5 phút.\n• Triển khai theo dõi đơn hàng realtime bằng ASP.NET Core SignalR, loại bỏ polling.\n• Xây dựng 68 HTTP endpoints và 2 SignalR Hubs, tích hợp VNPay và xuất báo cáo Excel (EPPlus).',
+    result: '• Tối ưu hệ thống hoàn thiện với độ trễ thấp và khả năng chịu tải tốt nhờ queue và cache.\n• Viết 16 unit tests (xUnit & Moq) cho module Cart và Checkout, đảm bảo độ ổn định của business logic và ngăn chặn lỗi regression.'
   },
   {
     id: 'cleantext',
@@ -68,18 +68,18 @@ export default function Projects() {
     const normTitle = title.toLowerCase();
     if (normTitle.includes('unimarket')) {
       return [
-        { label: 'Gợi ý sản phẩm', value: '< 45ms', desc: 'Thời gian phản hồi thực tế' },
-        { label: 'AI Chatbot stream', value: '< 200ms', desc: 'Token phản hồi đầu tiên' },
-        { label: 'Tải DB chính', value: '- 95%', desc: 'Giảm tải nhờ Redis Cache' },
-        { label: 'Khả năng chịu tải', value: '+ 300%', desc: 'Tăng cường hiệu năng API' }
+        { label: 'Quy mô hệ thống', value: '170+ APIs', desc: 'Backend .NET 9 Web API' },
+        { label: 'Xử lý lỗi tập trung', value: '32 Services', desc: 'Chuẩn hóa JSON Error Middleware' },
+        { label: 'Chatbot tư vấn', value: 'Gemini AI', desc: 'Tích hợp Function Calling' },
+        { label: 'Thiết lập local', value: '1 Lệnh chạy', desc: 'Container hóa Docker Compose' }
       ];
     }
     if (normTitle.includes('techgearshop')) {
       return [
-        { label: 'Lỗi Overselling', value: '0 Lỗi (100%)', desc: 'Khắc phục hoàn toàn kiểm kho' },
-        { label: 'Tải DB thanh toán', value: '- 80%', desc: 'Nhờ hàng đợi ngầm Channels' },
-        { label: 'Tốc độ xuất báo cáo', value: 'Tăng 5x', desc: 'Xử lý file Excel dung lượng lớn' },
-        { label: 'Xuất file 50k dòng', value: '< 2s', desc: 'Hiệu suất xử lý EPPlus' }
+        { label: 'Checkout Time', value: '60 ms', desc: 'Tối ưu từ 150ms nhờ RabbitMQ' },
+        { label: 'Lưu lượng ghi DB', value: '- 90%', desc: 'In-memory view buffering' },
+        { label: 'Backend APIs', value: '68 Endpoints', desc: 'Kèm theo 2 SignalR Hubs' },
+        { label: 'Unit Tests', value: '16 Tests', desc: 'xUnit & Moq cho Checkout' }
       ];
     }
     if (normTitle.includes('soundspace')) {
@@ -177,13 +177,19 @@ export default function Projects() {
     <section id="projects" className="py-24 relative overflow-hidden bg-transparent border-t border-white/5">
       <div className="absolute top-1/3 right-10 w-96 h-96 rounded-full bg-cyber-accent2/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="max-w-6xl mx-auto px-4 md:px-8 relative z-10"
+      >
         {/* Section Title */}
         <div className="text-center space-y-3 mb-16">
-          <h2 className="text-xs font-outfit font-extrabold tracking-[0.2em] text-cyber-accent2 uppercase">
+          <h2 className="text-xs font-jakarta font-extrabold tracking-[0.2em] text-cyber-accent2 uppercase">
             // PROJECTS.REPOSITORY
           </h2>
-          <h3 className="text-3xl md:text-4xl font-extrabold font-outfit text-white">
+          <h3 className="text-3xl md:text-4xl font-extrabold font-jakarta text-white">
             DỰ ÁN NỔI BẬT
           </h3>
           <div className="w-16 h-1 bg-gradient-to-r from-cyber-accent2 to-cyber-accent3 mx-auto rounded" />
@@ -197,7 +203,7 @@ export default function Projects() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-lg text-xs font-bold font-outfit tracking-wider transition-all border whitespace-nowrap ${
+                className={`px-4 py-2 rounded-lg text-xs font-bold font-jakarta tracking-wider transition-all border whitespace-nowrap ${
                   selectedCategory === cat
                     ? 'bg-cyber-accent2/10 border-cyber-accent2 text-cyber-accent2 shadow-[0_0_12px_rgba(168,85,247,0.15)]'
                     : 'bg-white/5 border-white/5 text-slate-400 hover:text-white'
@@ -245,7 +251,7 @@ export default function Projects() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/40 to-transparent" />
                   
                   {/* Category Tag */}
-                  <span className="absolute top-3 right-3 px-2 py-1 rounded bg-black/60 border border-white/10 text-xs font-outfit text-cyber-accent2 font-bold tracking-wider">
+                  <span className="absolute top-3 right-3 px-2 py-1 rounded bg-black/60 border border-white/10 text-xs font-jakarta text-cyber-accent2 font-bold tracking-wider">
                     {project.category}
                   </span>
                 </div>
@@ -304,7 +310,7 @@ export default function Projects() {
                     {/* PSR Detail toggle */}
                     <button
                       onClick={() => { setActiveProjectDetails(project); setActiveTab('overview'); }}
-                      className="inline-flex items-center gap-1 text-xs font-outfit font-bold text-cyber-accent2 hover:text-cyber-accent3 transition-colors group-hover:underline"
+                      className="inline-flex items-center gap-1 text-xs font-jakarta font-bold text-cyber-accent2 hover:text-cyber-accent3 transition-colors group-hover:underline"
                     >
                       CHI TIẾT PSR
                       <ChevronRight className="w-3.5 h-3.5" />
@@ -315,7 +321,7 @@ export default function Projects() {
             ))}
           </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
 
       {/* Cyber overlay Drawer modal (PSR details) */}
       <AnimatePresence>
@@ -342,7 +348,7 @@ export default function Projects() {
                 <div className="flex items-center gap-3">
                   <div className="w-2.5 h-2.5 rounded-full bg-cyber-accent2 animate-pulse" />
                   <div>
-                    <h3 className="font-outfit font-black text-lg text-white uppercase tracking-wide leading-none">
+                    <h3 className="font-jakarta font-black text-lg text-white uppercase tracking-wide leading-none">
                       {activeProjectDetails.title}
                     </h3>
                     <p className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-1">
@@ -356,7 +362,7 @@ export default function Projects() {
                     href={activeProjectDetails.githubUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/5 transition-all flex items-center gap-1 text-[10px] font-outfit font-extrabold tracking-wider"
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/5 transition-all flex items-center gap-1 text-[10px] font-jakarta font-extrabold tracking-wider"
                   >
                     <Github className="w-3.5 h-3.5" />
                     <span>CODE</span>
@@ -366,7 +372,7 @@ export default function Projects() {
                       href={activeProjectDetails.liveUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-1.5 rounded-lg bg-cyber-accent2/10 hover:bg-cyber-accent2/20 text-cyber-accent2 border border-cyber-accent2/20 hover:border-cyber-accent2/40 transition-all flex items-center gap-1 text-[10px] font-outfit font-extrabold tracking-wider shadow-[0_0_10px_rgba(168,85,247,0.1)]"
+                      className="p-1.5 rounded-lg bg-cyber-accent2/10 hover:bg-cyber-accent2/20 text-cyber-accent2 border border-cyber-accent2/20 hover:border-cyber-accent2/40 transition-all flex items-center gap-1 text-[10px] font-jakarta font-extrabold tracking-wider shadow-[0_0_10px_rgba(168,85,247,0.1)]"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       <span>DEMO</span>
@@ -391,7 +397,7 @@ export default function Projects() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`py-3 px-3 text-[10px] font-outfit font-extrabold tracking-widest border-b-2 transition-all relative whitespace-nowrap ${
+                    className={`py-3 px-3 text-[10px] font-jakarta font-extrabold tracking-widest border-b-2 transition-all relative whitespace-nowrap ${
                       activeTab === tab.id
                         ? 'border-cyber-accent2 text-cyber-accent2 font-black'
                         : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -436,7 +442,7 @@ export default function Projects() {
 
                     {/* KPI Metrics Dashboard Grid */}
                     <div className="space-y-3">
-                      <h4 className="text-xs font-outfit font-extrabold tracking-[0.15em] text-cyber-accent1 uppercase">
+                      <h4 className="text-xs font-jakarta font-extrabold tracking-[0.15em] text-cyber-accent1 uppercase">
                         // CORE PERFORMANCE METRICS
                       </h4>
                       <div className="grid grid-cols-2 gap-4">
@@ -445,7 +451,7 @@ export default function Projects() {
                             key={idx}
                             className="p-3.5 rounded-xl border border-white/5 bg-[#0e1424]/60 hover:border-cyber-accent1/20 transition-all duration-300 hover:shadow-[0_0_15px_rgba(6,182,212,0.05)] flex flex-col justify-between"
                           >
-                            <span className="text-[10px] font-outfit font-extrabold tracking-wider text-slate-400 uppercase">
+                            <span className="text-[10px] font-jakarta font-extrabold tracking-wider text-slate-400 uppercase">
                               {metric.label}
                             </span>
                             <span className="text-xl font-black font-mono text-cyber-accent1 mt-1.5 drop-shadow-[0_0_6px_rgba(6,182,212,0.3)]">
@@ -461,7 +467,7 @@ export default function Projects() {
 
                     {/* Technologies tags */}
                     <div className="space-y-3">
-                      <h4 className="text-xs font-outfit font-extrabold tracking-[0.15em] text-slate-400 uppercase">
+                      <h4 className="text-xs font-jakarta font-extrabold tracking-[0.15em] text-slate-400 uppercase">
                         // TECH STACK DEPLOYED
                       </h4>
                       <div className="flex flex-wrap gap-1.5">
@@ -484,7 +490,7 @@ export default function Projects() {
                   >
                     {/* Problem Section */}
                     <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-rose-400 font-outfit font-black text-xs tracking-wider uppercase">
+                      <div className="flex items-center gap-2 text-rose-400 font-jakarta font-black text-xs tracking-wider uppercase">
                         <HelpCircle className="w-4.5 h-4.5" />
                         PROBLEM / THỬ THÁCH & VẤN ĐỀ ĐẶT RA
                       </div>
@@ -493,7 +499,7 @@ export default function Projects() {
 
                     {/* Solution Section */}
                     <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-cyan-400 font-outfit font-black text-xs tracking-wider uppercase">
+                      <div className="flex items-center gap-2 text-cyan-400 font-jakarta font-black text-xs tracking-wider uppercase">
                         <ToggleLeft className="w-4.5 h-4.5" />
                         SOLUTION / GIẢI PHÁP & KIẾN TRÚC TRIỂN KHAI
                       </div>
@@ -511,7 +517,7 @@ export default function Projects() {
                   >
                     {/* Result Section */}
                     <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-emerald-400 font-outfit font-black text-xs tracking-wider uppercase">
+                      <div className="flex items-center gap-2 text-emerald-400 font-jakarta font-black text-xs tracking-wider uppercase">
                         <CheckCircle className="w-4.5 h-4.5" />
                         RESULT / HIỆU QUẢ ĐO LƯỜNG THỰC TẾ
                       </div>

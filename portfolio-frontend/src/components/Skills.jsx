@@ -65,7 +65,6 @@ export default function Skills() {
     ? skills 
     : skills.filter(skill => skill.category === activeCategory);
 
-  // Data formatted for Recharts Radar (taking top 6 skills for optimal radar shape)
   const radarData = skills.slice(0, 6);
 
   const handleTickClick = (skillName) => {
@@ -91,7 +90,7 @@ export default function Skills() {
 
     return (
       <g 
-        className="cursor-pointer"
+        className="cursor-pointer font-jakarta"
         onClick={() => handleTickClick(payload.value)}
         onMouseEnter={() => setHoveredSkill(payload.value)}
         onMouseLeave={() => setHoveredSkill(null)}
@@ -103,7 +102,7 @@ export default function Skills() {
           fill={fill}
           fontSize={fontSize}
           fontWeight={fontWeight}
-          fontFamily="Outfit"
+          fontFamily="Plus Jakarta Sans"
           style={{ transition: 'all 0.2s ease-in-out' }}
           className={isActive ? 'drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]' : ''}
         >
@@ -116,8 +115,8 @@ export default function Skills() {
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-slate-950/95 border border-cyber-accent1/30 px-3 py-2 rounded-lg backdrop-blur-md shadow-[0_0_15px_rgba(6,182,212,0.2)]">
-          <p className="text-xs font-outfit font-bold text-white uppercase tracking-wider">{payload[0].name}</p>
+        <div className="bg-slate-950/95 border border-cyber-accent1/30 px-3 py-2 rounded-lg backdrop-blur-md shadow-[0_0_15px_rgba(6,182,212,0.2)] font-jakarta">
+          <p className="text-xs font-bold text-white uppercase tracking-wider">{payload[0].name}</p>
           <p className="text-sm font-mono text-cyber-accent1 font-bold mt-1">Trình độ: {payload[0].value}%</p>
         </div>
       );
@@ -131,23 +130,31 @@ export default function Skills() {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-cyber-accent1/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
-        {/* Section Title */}
-        <div className="text-center space-y-3 mb-16">
-          <h2 className="text-xs font-outfit font-extrabold tracking-[0.2em] text-cyber-accent1 uppercase">
+        
+        {/* Section Title with Scroll Reveal */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
+          className="text-center space-y-3 mb-16"
+        >
+          <h2 className="text-xs font-jakarta font-extrabold tracking-[0.2em] text-cyber-accent1 uppercase">
             // SKILLS.DASHBOARD
           </h2>
-          <h3 className="text-3xl md:text-4xl font-extrabold font-outfit text-white">
+          <h3 className="text-3xl md:text-4xl font-extrabold font-jakarta text-white">
             NĂNG LỰC CÔNG NGHỆ
           </h3>
           <div className="w-16 h-1 bg-gradient-to-r from-cyber-accent1 to-cyber-accent2 mx-auto rounded" />
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Recharts Radar Chart */}
+          
+          {/* Left Column: Recharts Radar Chart with Left Scroll Reveal */}
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
             className="lg:col-span-5 h-[320px] md:h-[380px] p-6 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md flex flex-col items-center justify-center relative group overflow-hidden animate-pulse-cyan"
           >
@@ -155,7 +162,7 @@ export default function Skills() {
             <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-cyber-accent1/20" />
             <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-cyber-accent2/20" />
 
-            <h4 className="text-xs font-outfit text-slate-400 font-bold tracking-wider mb-4 uppercase">
+            <h4 className="text-xs font-jakarta text-slate-400 font-bold tracking-wider mb-4 uppercase">
               Visual Matrix analysis
             </h4>
             
@@ -197,18 +204,24 @@ export default function Skills() {
             </div>
           </motion.div>
 
-          {/* Right Column: Interactive Skills List */}
-          <div className="lg:col-span-7 space-y-6">
+          {/* Right Column: Interactive Skills List with Right Scroll Reveal */}
+          <motion.div 
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-7 space-y-6"
+          >
             {/* Filter categories */}
             <div className="flex flex-wrap gap-2">
               {categories.map(cat => (
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`px-4 py-2 rounded-lg text-xs font-bold tracking-wider font-outfit transition-all duration-300 border ${
+                  className={`px-4 py-2.5 rounded-xl text-xs font-bold tracking-wider font-jakarta transition-all duration-300 border ${
                     activeCategory === cat.id
                       ? 'bg-cyber-accent1/10 border-cyber-accent1 text-cyber-accent1 shadow-[0_0_15px_rgba(6,182,212,0.15)]'
-                      : 'bg-white/5 border-white/5 text-slate-400 hover:text-white hover:border-slate-700'
+                      : 'bg-white/5 border-white/5 text-slate-400 hover:text-white hover:border-slate-700 hover:scale-105 active:scale-95'
                   }`}
                 >
                   {cat.name}
@@ -216,7 +229,7 @@ export default function Skills() {
               ))}
             </div>
 
-            {/* Progress Bars Grid */}
+            {/* Progress Bars Grid with hover animations */}
             <motion.div 
               layout
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
@@ -229,12 +242,13 @@ export default function Skills() {
                     key={skill.name}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    transition={{ duration: 0.2 }}
                     onMouseEnter={() => setHoveredSkill(skill.name)}
                     onMouseLeave={() => setHoveredSkill(null)}
                     className={`p-4 rounded-xl border backdrop-blur-md transition-all duration-300 cursor-pointer ${
                       hoveredSkill === skill.name
-                        ? 'border-cyber-accent1 bg-cyber-accent1/5 scale-[1.02] shadow-[0_0_15px_rgba(6,182,212,0.1)]'
+                        ? 'border-cyber-accent1 bg-cyber-accent1/5 shadow-[0_5px_15px_rgba(6,182,212,0.1)]'
                         : 'border-white/5 bg-cyber-card'
                     }`}
                   >
@@ -243,7 +257,7 @@ export default function Skills() {
                         <div className="p-1.5 rounded-lg bg-white/5 text-cyber-accent1 group-hover:text-cyber-accent2 transition-colors">
                           <IconComponent className="w-4 h-4" />
                         </div>
-                        <span className="font-semibold text-sm text-slate-200 group-hover:text-white transition-colors">
+                        <span className="font-bold text-sm text-slate-200 group-hover:text-white transition-colors font-jakarta">
                           {skill.name}
                         </span>
                       </div>
@@ -269,7 +283,7 @@ export default function Skills() {
                 );
               })}
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

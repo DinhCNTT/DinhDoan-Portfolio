@@ -4,10 +4,13 @@ import { Menu, X, Cpu, MessageSquare } from 'lucide-react';
 
 const navItems = [
   { name: 'Trang Chủ', href: '#home' },
+  { name: 'Thành Tích', href: '#stats' },
   { name: 'Kỹ Năng', href: '#skills' },
   { name: 'Dự Án', href: '#projects' },
   { name: 'Kinh Nghiệm', href: '#experience' },
-  { name: 'Học Vấn', href: '#education' }
+  { name: 'Học Vấn', href: '#education' },
+  { name: 'Đánh Giá', href: '#testimonials' },
+  { name: 'Liên Hệ', href: '#contact' }
 ];
 
 export default function Navbar() {
@@ -66,7 +69,7 @@ export default function Navbar() {
         <a 
           href="#home" 
           onClick={(e) => scrollToSection(e, 'home')}
-          className="flex items-center gap-2 font-outfit font-extrabold text-xl tracking-wider group text-white"
+          className="flex items-center gap-2 font-jakarta font-extrabold text-xl tracking-wider group text-white"
         >
           <div className="w-8 h-8 rounded bg-gradient-to-tr from-cyber-accent1 to-cyber-accent2 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.3)] group-hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] transition-all">
             <Cpu className="w-4 h-4 text-white" />
@@ -76,9 +79,9 @@ export default function Navbar() {
           </span>
           <span className="text-slate-400 group-hover:text-cyber-accent1 transition-colors">.DEV</span>
         </a>
-
+ 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-2 lg:gap-4">
           {navItems.map((item) => {
             const id = item.href.substring(1);
             const isActive = activeSection === id;
@@ -87,7 +90,7 @@ export default function Navbar() {
                 key={item.name}
                 href={item.href}
                 onClick={(e) => scrollToSection(e, id)}
-                className={`relative px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
+                className={`relative px-2.5 py-2 text-xs lg:text-sm font-semibold transition-colors duration-200 font-jakarta whitespace-nowrap ${
                   isActive ? 'text-cyber-accent1 font-bold' : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -102,14 +105,14 @@ export default function Navbar() {
               </a>
             );
           })}
-
+ 
           {/* Quick Chat Callout Button */}
           <button 
             onClick={() => {
               const chatbotWidgetBtn = document.getElementById('chatbot-widget-trigger');
               if (chatbotWidgetBtn) chatbotWidgetBtn.click();
             }}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-cyber-accent1/30 bg-cyber-accent1/10 hover:bg-cyber-accent1/20 text-cyber-accent1 font-bold text-xs tracking-wider font-outfit transition-all hover:scale-105 active:scale-95 shadow-[0_0_10px_rgba(6,182,212,0.1)]"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-cyber-accent1/30 bg-cyber-accent1/10 hover:bg-cyber-accent1/20 text-cyber-accent1 font-bold text-xs tracking-wider font-jakarta transition-all hover:scale-105 active:scale-95 shadow-[0_0_10px_rgba(6,182,212,0.1)] whitespace-nowrap"
           >
             <MessageSquare className="w-3.5 h-3.5" />
             AI CLONE
@@ -155,7 +158,7 @@ export default function Navbar() {
                     key={item.name}
                     href={item.href}
                     onClick={(e) => scrollToSection(e, id)}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                    className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all font-jakarta ${
                       isActive 
                         ? 'bg-cyber-accent1/10 text-cyber-accent1 border-l-2 border-cyber-accent1' 
                         : 'text-slate-400 hover:bg-white/5 hover:text-white'

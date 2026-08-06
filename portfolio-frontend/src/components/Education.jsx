@@ -7,26 +7,34 @@ export default function Education() {
     <section id="education" className="py-24 relative overflow-hidden bg-transparent border-t border-white/5">
       <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-cyber-accent2/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto px-4 md:px-8 relative z-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="max-w-5xl mx-auto px-4 md:px-8 relative z-10"
+      >
         {/* Section Title */}
         <div className="text-center space-y-3 mb-16">
-          <h2 className="text-xs font-outfit font-extrabold tracking-[0.2em] text-cyber-accent2 uppercase">
+          <h2 className="text-xs font-jakarta font-extrabold tracking-[0.2em] text-cyber-accent2 uppercase">
             // ACADEMIC.BACKGROUND
           </h2>
-          <h3 className="text-3xl md:text-4xl font-extrabold font-outfit text-white">
+          <h3 className="text-3xl md:text-4xl font-extrabold font-jakarta text-white">
             HỌC VẤN & GIẢI THƯỞNG
           </h3>
           <div className="w-16 h-1 bg-gradient-to-r from-cyber-accent2 to-cyber-accent3 mx-auto rounded" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+          
           {/* Left Column: Academic degree info */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="md:col-span-7 p-6 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md flex flex-col justify-between relative group hover:border-cyber-accent2/20 transition-all duration-300 animate-pulse-cyan"
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className="md:col-span-7 p-6 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md flex flex-col justify-between relative group hover:border-cyber-accent2/20 transition-all duration-300 animate-pulse-cyan shadow-[0_10px_25px_rgba(0,0,0,0.3)]"
           >
             {/* Visual Accent */}
             <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-cyber-accent2/10" />
@@ -37,32 +45,32 @@ export default function Education() {
                   <GraduationCap className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-outfit font-extrabold text-white">
+                  <h4 className="text-lg font-jakarta font-extrabold text-white">
                     ĐẠI HỌC CÔNG NGHỆ TP.HCM (HUTECH)
                   </h4>
-                  <p className="text-cyber-accent2 font-semibold text-sm mt-1">
+                  <p className="text-cyber-accent2 font-semibold text-sm mt-1 font-jakarta">
                     Cử Nhân Kỹ Thuật Phần Mềm (Software Engineering)
                   </p>
-                  <p className="text-slate-400 text-xs mt-0.5">
+                  <p className="text-slate-400 text-xs mt-0.5 font-jakarta">
                     Niên khóa: 2022 – 2026 (Đã hoàn thành toàn bộ chương trình học)
                   </p>
                 </div>
               </div>
 
               {/* GPA Metric Display */}
-              <div className="p-4 rounded-xl border border-white/5 bg-black/30 flex items-center justify-between">
+              <div className="p-4 rounded-xl border border-white/5 bg-black/30 flex items-center justify-between font-jakarta">
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-cyber-accent1" />
                   <span className="text-slate-300 text-sm font-medium">Điểm trung bình tích lũy (GPA):</span>
                 </div>
-                <span className="text-xl font-outfit font-extrabold text-cyber-accent1 drop-shadow-[0_0_8px_rgba(6,182,212,0.3)]">
+                <span className="text-xl font-jakarta font-extrabold text-cyber-accent1 drop-shadow-[0_0_8px_rgba(6,182,212,0.3)]">
                   3.43 / 4.0
                 </span>
               </div>
 
               {/* Core focus details */}
-              <div className="space-y-2.5">
-                <h5 className="text-xs font-outfit font-bold text-slate-400 tracking-wider">
+              <div className="space-y-2.5 font-jakarta">
+                <h5 className="text-xs font-jakarta font-bold text-slate-400 tracking-wider">
                   NỘI DUNG HOÀN THÀNH CHỦ ĐẠO:
                 </h5>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -92,22 +100,23 @@ export default function Education() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="p-6 rounded-2xl border border-amber-500/10 bg-amber-500/5 relative group flex-1 flex flex-col justify-center space-y-3"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="p-6 rounded-2xl border border-amber-500/10 bg-amber-500/5 relative group flex-1 flex flex-col justify-center space-y-3 hover:border-amber-500/30 transition-all duration-300 shadow-[0_10px_25px_rgba(0,0,0,0.3)]"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.15)]">
                   <Award className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-outfit font-bold text-white leading-tight">
+                  <h4 className="font-jakarta font-extrabold text-white leading-tight">
                     SINH VIÊN XUẤT SẮC
                   </h4>
-                  <p className="text-amber-500 text-xs font-bold font-outfit mt-0.5">
+                  <p className="text-amber-500 text-xs font-bold font-jakarta mt-0.5">
                     OUTSTANDING STUDENT AWARD
                   </p>
                 </div>
               </div>
-              <p className="text-slate-400 text-xs leading-relaxed">
+              <p className="text-slate-400 text-xs leading-relaxed font-jakarta">
                 Được vinh danh bởi Đại học Công nghệ TP.HCM (HUTECH) vào tháng 11/2025 nhờ thành tích học tập và hoạt động đóng góp xuất sắc.
               </p>
             </motion.div>
@@ -118,38 +127,39 @@ export default function Education() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="p-6 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md flex-1 flex flex-col justify-center space-y-3 animate-pulse-purple"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="p-6 rounded-2xl border border-white/5 bg-cyber-card backdrop-blur-md flex-1 flex flex-col justify-center space-y-3 animate-pulse-purple hover:border-cyber-accent2/20 transition-all duration-300 shadow-[0_10px_25px_rgba(0,0,0,0.3)]"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-cyber-accent1/10 text-cyber-accent1">
                   <Languages className="w-5 h-5" />
                 </div>
-                <h4 className="font-outfit font-bold text-white">
+                <h4 className="font-jakarta font-extrabold text-white">
                   KHẢ NĂNG NGÔN NGỮ
                 </h4>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 font-jakarta">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-300 text-xs font-medium">Tiếng Việt (Bản xứ):</span>
-                  <span className="text-xs font-bold font-outfit text-cyber-accent1 bg-cyber-accent1/10 border border-cyber-accent1/20 px-2 py-0.5 rounded">
+                  <span className="text-xs font-bold font-jakarta text-cyber-accent1 bg-cyber-accent1/10 border border-cyber-accent1/20 px-2 py-0.5 rounded">
                     NATIVE
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-300 text-xs font-medium">Tiếng Anh (Chuyên ngành):</span>
-                  <span className="text-xs font-bold font-outfit text-cyber-accent2 bg-cyber-accent2/10 border border-cyber-accent2/20 px-2 py-0.5 rounded">
-                    PROFICIENT
+                  <span className="text-slate-300 text-xs font-medium">Tiếng Anh (B1 CEFR):</span>
+                  <span className="text-xs font-bold font-jakarta text-cyber-accent2 bg-cyber-accent2/10 border border-cyber-accent2/20 px-2 py-0.5 rounded">
+                    B1 CEFR
                   </span>
                 </div>
                 <p className="text-slate-400 text-[11px] leading-tight mt-1">
-                  * Đọc hiểu tài liệu kỹ thuật, nghiên cứu tài liệu hệ thống và giao tiếp cơ bản tốt.
+                  * Đạt chứng chỉ B1 CEFR. Đọc hiểu tài liệu kỹ thuật và nghiên cứu tài liệu hệ thống chuyên nghiệp.
                 </p>
               </div>
             </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

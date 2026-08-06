@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -96,10 +98,72 @@ namespace Portfolio.API.Controllers
             
             return Ok(new { message = $"Đã xóa cuộc hội thoại {sessionId}" });
         }
+
+        [HttpGet("contacts")]
+        public IActionResult GetContacts()
+        {
+            var contactsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "contacts.json");
+            if (!System.IO.File.Exists(contactsFilePath))
+            {
+                return Ok(new List<ContactRequestDto>());
+            }
+            try
+            {
+                string json = System.IO.File.ReadAllText(contactsFilePath);
+                var contacts = JsonSerializer.Deserialize<List<ContactRequestDto>>(json) ?? new List<ContactRequestDto>();
+                var sortedContacts = contacts.OrderByDescending(c => c.CreatedAt).ToList();
+                return Ok(sortedContacts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Lỗi đọc danh sách liên hệ: {ex.Message}" });
+            }
+        }
+
+        [HttpDelete("contacts")]
+        public IActionResult DeleteContact([FromQuery] string email, [FromQuery] string createdAt)
+        {
+            var contactsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "contacts.json");
+            if (!System.IO.File.Exists(contactsFilePath))
+            {
+                return NotFound(new { message = "Không tìm thấy file liên hệ." });
+            }
+            try
+            {
+                string json = System.IO.File.ReadAllText(contactsFilePath);
+                var contacts = JsonSerializer.Deserialize<List<ContactRequestDto>>(json) ?? new List<ContactRequestDto>();
+                
+                if (DateTime.TryParse(createdAt, out DateTime targetDate))
+                {
+                    // Match email and timestamp close enough (within 2 seconds)
+                    int removedCount = contacts.RemoveAll(c => c.Email == email && Math.Abs((c.CreatedAt.ToUniversalTime() - targetDate.ToUniversalTime()).TotalSeconds) < 2);
+                    if (removedCount > 0)
+                    {
+                        string updatedJson = JsonSerializer.Serialize(contacts, new JsonSerializerOptions { WriteIndented = true });
+                        System.IO.File.WriteAllText(contactsFilePath, updatedJson);
+                        return Ok(new { message = "Đã xóa liên hệ thành công." });
+                    }
+                }
+                return BadRequest(new { message = "Không tìm thấy liên hệ cần xóa." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Lỗi khi xóa liên hệ: {ex.Message}" });
+            }
+        }
     }
 
     public class UpdatePromptRequest
     {
         public string Prompt { get; set; } = string.Empty;
+    }
+
+    public class ContactRequestDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Subject { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

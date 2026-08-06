@@ -30,6 +30,9 @@ builder.Services.AddScoped<ICvEmbeddingRepository, CvEmbeddingRepository>();
 // Register Gemini Service with HttpClient
 builder.Services.AddHttpClient<IGeminiService, GeminiService>();
 
+// Register Email Service
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 // Configure JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key is missing in settings");
 builder.Services.AddAuthentication(options =>
