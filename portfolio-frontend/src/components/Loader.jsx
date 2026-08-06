@@ -53,7 +53,7 @@ export default function Loader({ onComplete }) {
         ...(isMobile ? {} : { filter: 'blur(10px)' }),
         transition: { duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] } 
       }}
-      className="fixed inset-0 bg-[#030208] z-[9999] flex flex-col items-center justify-center font-orbitron select-none overflow-hidden"
+      className={`fixed inset-0 bg-[#030208] z-[9999] flex flex-col items-center justify-center font-orbitron select-none overflow-hidden ${progress === 100 ? 'pointer-events-none' : ''}`}
     >
       {/* Cyber Grid background only for loader */}
       <div className="absolute inset-0 bg-grid opacity-[0.07] pointer-events-none" />
