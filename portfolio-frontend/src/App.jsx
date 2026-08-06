@@ -64,7 +64,7 @@ function App() {
         )}
       </AnimatePresence>
 
-      <div className="min-h-screen bg-cyber-bg text-slate-100 flex flex-col selection:bg-cyber-accent1/25 selection:text-cyber-accent1 select-none overflow-x-hidden relative">
+      <div className="min-h-screen bg-cyber-bg text-slate-100 flex flex-col selection:bg-cyber-accent1/25 selection:text-cyber-accent1 overflow-x-hidden relative">
         {/* Cyberpunk Dynamic Background */}
         <CyberBackground />
 

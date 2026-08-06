@@ -2,14 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { MessageSquare, ArrowRight, Github, Linkedin, Award, BookOpen, Briefcase } from 'lucide-react';
 
-export default function Hero() {
+function TypingTerminal() {
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // Parallax background scroll effects
-  const { scrollY } = useScroll();
-  const yBg = useTransform(scrollY, [0, 500], [0, 100]);
-  const yText = useTransform(scrollY, [0, 500], [0, -30]);
 
   useEffect(() => {
     let timer;
@@ -39,6 +34,21 @@ export default function Hero() {
 
     return () => clearTimeout(timer);
   }, [displayText, isDeleting]);
+
+  return (
+    <div className="h-8 flex items-center justify-start font-mono text-slate-400 text-lg md:text-2xl font-bold">
+      <span className="text-cyber-accent1 mr-2">&gt;</span>
+      <span>{displayText}</span>
+      <span className="w-2 h-5 bg-cyber-accent1 ml-1 animate-pulse" />
+    </div>
+  );
+}
+
+export default function Hero() {
+  // Parallax background scroll effects
+  const { scrollY } = useScroll();
+  const yBg = useTransform(scrollY, [0, 500], [0, 100]);
+  const yText = useTransform(scrollY, [0, 500], [0, -30]);
 
   // Framer Motion entry variants
   const containerVariants = {
@@ -123,13 +133,8 @@ export default function Hero() {
               </motion.h1>
 
               {/* Typing Terminal Text */}
-              <motion.div 
-                variants={itemVariants}
-                className="h-8 flex items-center justify-start font-mono text-slate-400 text-lg md:text-2xl font-bold"
-              >
-                <span className="text-cyber-accent1 mr-2">&gt;</span>
-                <span>{displayText}</span>
-                <span className="w-2 h-5 bg-cyber-accent1 ml-1 animate-pulse" />
+              <motion.div variants={itemVariants}>
+                <TypingTerminal />
               </motion.div>
             </div>
 

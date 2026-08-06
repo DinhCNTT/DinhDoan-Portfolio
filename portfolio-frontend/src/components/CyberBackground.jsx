@@ -47,9 +47,9 @@ export default function CyberBackground() {
         className="absolute top-[35%] left-[45%] -translate-x-1/2 w-[55vw] h-[55vw] max-w-[550px] max-h-[550px] rounded-full bg-cyber-accent3/3 blur-[150px]" 
       />
 
-      {/* Layer 5: Procedural Micro-noise/grain texture overlay for premium matte finish */}
+      {/* Layer 5: Procedural Micro-noise/grain texture overlay for premium matte finish (hidden on mobile for performance) */}
       <div 
-        className="absolute inset-0 opacity-[0.025] mix-blend-overlay pointer-events-none"
+        className="absolute inset-0 opacity-[0.025] mix-blend-overlay pointer-events-none hidden lg:block"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         }}

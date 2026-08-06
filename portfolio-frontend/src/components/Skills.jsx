@@ -229,16 +229,16 @@ export default function Skills() {
               ))}
             </div>
 
-            {/* Progress Bars Grid with hover animations */}
+            {/* Progress Bars Grid with hover animations (layout animation disabled on mobile for performance) */}
             <motion.div 
-              layout
+              layout={typeof window !== 'undefined' && window.innerWidth >= 768 ? "position" : false}
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               {filteredSkills.map(skill => {
                 const IconComponent = skill.icon;
                 return (
                   <motion.div
-                    layout
+                    layout={typeof window !== 'undefined' && window.innerWidth >= 768 ? "position" : false}
                     key={skill.name}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}

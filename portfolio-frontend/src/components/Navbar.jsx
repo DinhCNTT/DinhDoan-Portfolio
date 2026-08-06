@@ -19,28 +19,47 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    // 1. Throttled scroll listener to control navbar styling (avoiding layout thrashing)
+    let scrollTimeout;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-
-      // Simple intersection observer approximation
-      const sections = navItems.map(item => item.href.substring(1));
-      const scrollPosition = window.scrollY + 200;
-
-      for (const section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section);
-            break;
-          }
-        }
+      if (!scrollTimeout) {
+        scrollTimeout = setTimeout(() => {
+          setScrolled(window.scrollY > 20);
+          scrollTimeout = null;
+        }, 100);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    // 2. High-performance IntersectionObserver to track active viewport section
+    const observerOptions = {
+      root: null,
+      rootMargin: '-30% 0px -60% 0px', // Focuses on the top-middle third of viewport
+      threshold: 0
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    // Begin observing each target section
+    navItems.forEach(item => {
+      const id = item.href.substring(1);
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      observer.disconnect();
+    };
   }, []);
 
   const scrollToSection = (e, id) => {

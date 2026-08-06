@@ -5,7 +5,7 @@ import { Zap, Database, Users, ShieldCheck } from 'lucide-react';
 function CounterItem({ target, duration = 1500, suffix = '', prefix = '', decimals = 0 }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: '-50px' });
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
 
   useEffect(() => {
     if (!isInView) {

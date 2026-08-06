@@ -232,7 +232,7 @@ export default function Projects() {
           <AnimatePresence mode="popLayout">
             {filteredProjects.map(project => (
               <motion.div
-                layout
+                layout={typeof window !== 'undefined' && window.innerWidth >= 768 ? "position" : false}
                 key={project.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
