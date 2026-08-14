@@ -12,8 +12,51 @@ const SUGGESTIONS = [
   "Thông tin liên hệ của Định?"
 ];
 
+const SLOGANS = [
+  "💬 Tò mò về tôi? Chat với AI Clone để phỏng vấn tớ nhé!",
+  "🤖 Hỏi trợ lý AI xem Định có thể làm gì cho dự án của bạn!",
+  "✨ Tìm kiếm thông tin liên hệ, học vấn của Định? Bấm chat ngay!",
+  "🚀 Trợ lý AI sẵn sàng trả lời 24/7. Hỏi mình bất cứ điều gì!"
+];
+
 export default function ChatbotWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showBubble, setShowBubble] = useState(false);
+  const [currentSloganIndex, setCurrentSloganIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowBubble(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!showBubble || isOpen) return;
+
+    const interval = setInterval(() => {
+      setCurrentSloganIndex((prev) => (prev + 1) % SLOGANS.length);
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [showBubble, isOpen]);
+
+  const handleToggleChat = () => {
+    setIsOpen(prev => {
+      const nextState = !prev;
+      if (nextState) {
+        setShowBubble(false);
+      }
+      return nextState;
+    });
+  };
+
+  const handleDismissBubble = (e) => {
+    e.stopPropagation();
+    setShowBubble(false);
+  };
+
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem('chat_history');
     if (saved) {
@@ -242,20 +285,117 @@ export default function ChatbotWidget() {
 
   return (
     <>
-      {/* Floating Trigger Button */}
-      <button
-        id="chatbot-widget-trigger"
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-gradient-to-r from-cyber-accent2 to-cyber-accent3 hover:from-purple-600 hover:to-pink-600 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_25px_rgba(168,85,247,0.7)] transition-all hover:scale-110 active:scale-95 group"
-        title="Trò chuyện với AI Clone"
-      >
-        {isOpen ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6 animate-pulse" />}
-        {!isOpen && (
-          <span className="absolute right-14 top-1/2 -translate-y-1/2 px-3 py-1 bg-cyber-card border border-cyber-accent2/30 rounded-lg text-xs font-semibold font-outfit text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-            Hỏi AI Trợ Lý 👋
+      {/* Zalo Floating Button - Hidden when AI Chatbox is open to avoid overlay overlap */}
+      {!isOpen && (
+        <div className="fixed bottom-24 right-6 z-50 group">
+          <a 
+            href="https://zalo.me/0842070552"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center w-14 h-14 bg-[#0068ff] text-white rounded-full shadow-[0_0_15px_rgba(0,104,255,0.5)] hover:scale-110 hover:shadow-[0_0_25px_rgba(0,104,255,0.85)] transition-all duration-300 relative"
+            aria-label="Liên hệ Zalo"
+          >
+            <span className="font-bold text-base md:text-lg font-jakarta tracking-wide">Zalo</span>
+          </a>
+          
+          {/* Zalo Tooltip */}
+          <span className="absolute right-18 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-[#0b0f19]/90 border border-blue-500/30 rounded-xl text-xs font-semibold font-jakarta text-slate-200 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-[0_0_15px_rgba(0,0,0,0.55)] backdrop-blur-sm">
+            Kết nối Zalo trực tiếp 💬
+            {/* Arrow pointer */}
+            <span className="absolute top-1/2 right-[-4px] -translate-y-1/2 w-2 h-2 bg-[#0b0f19] border-r border-t border-blue-500/30 rotate-45" />
           </span>
+        </div>
+      )}
+
+      {/* Speech Bubble / Greeting Slogans */}
+      <AnimatePresence>
+        {!isOpen && showBubble && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, x: 30 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.8, x: 30 }}
+            onClick={handleToggleChat}
+            className="fixed bottom-6 right-24 z-50 w-[280px] md:w-[340px] bg-[#0b0f19]/95 border border-cyber-accent2/50 backdrop-blur-md text-slate-100 rounded-2xl p-4 pr-9 shadow-[0_0_35px_rgba(168,85,247,0.4)] cursor-pointer select-none text-xs md:text-sm font-jakarta flex gap-3 hover:border-cyber-accent2 transition-all hover:shadow-[0_0_40px_rgba(168,85,247,0.5)]"
+          >
+            {/* Tiny triangle arrow pointing to the button */}
+            <div className="absolute top-1/2 right-[-6px] -translate-y-1/2 w-3 h-3 bg-[#0b0f19] border-r border-t border-cyber-accent2/50 rotate-45 pointer-events-none" />
+
+            {/* Glowing Bot Avatar inside bubble */}
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyber-accent1 to-cyber-accent2 flex items-center justify-center shadow-[0_0_12px_rgba(6,182,212,0.4)] relative">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="text-[10px] font-extrabold tracking-widest text-cyber-accent1 font-outfit uppercase">
+                  Trợ Lý AI
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[9px] text-slate-400 font-medium">Online</span>
+              </div>
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={currentSloganIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-slate-200 font-semibold leading-relaxed font-jakarta"
+                >
+                  {SLOGANS[currentSloganIndex]}
+                </motion.p>
+              </AnimatePresence>
+            </div>
+
+            {/* Dismiss Button */}
+            <button
+              onClick={handleDismissBubble}
+              className="absolute top-2.5 right-2.5 text-slate-500 hover:text-rose-400 p-0.5 rounded transition-colors"
+              title="Tắt thông báo"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
         )}
-      </button>
+      </AnimatePresence>
+
+      {/* Floating Trigger Button Container */}
+      <div className="fixed bottom-6 right-6 z-50 flex items-center justify-center">
+        {/* Pulsing Outer Ripples (when closed) */}
+        {!isOpen && (
+          <>
+            <div className="absolute inset-[-6px] rounded-full bg-cyber-accent2/25 animate-ping-slow pointer-events-none" style={{ animationDelay: '0s' }} />
+            <div className="absolute inset-[-6px] rounded-full bg-cyber-accent1/15 animate-ping-slow pointer-events-none" style={{ animationDelay: '1.75s' }} />
+          </>
+        )}
+
+        <div className="relative w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.35)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] transition-all duration-300 hover:scale-110 active:scale-95 group">
+          {/* Actual button with soft purple border */}
+          <button
+            id="chatbot-widget-trigger"
+            onClick={handleToggleChat}
+            className="relative w-full h-full bg-slate-950 hover:bg-slate-900 border-2 border-cyber-accent2/50 hover:border-cyber-accent2/80 text-white rounded-full flex items-center justify-center transition-colors"
+            title="Trò chuyện với AI Clone"
+          >
+            {/* Red active notification badge */}
+            {!isOpen && (
+              <span className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-rose-600 border-2 border-slate-950 rounded-full flex items-center justify-center text-[10px] font-black font-outfit text-white shadow-[0_0_12px_rgba(244,63,94,0.7)] z-20">
+                1
+              </span>
+            )}
+
+            {isOpen ? (
+              <X className="w-6 h-6 text-white" />
+            ) : (
+              <div className="relative flex items-center justify-center text-cyber-accent2 group-hover:text-cyber-accent3 transition-colors animate-bot-float">
+                <Bot className="w-7 h-7" />
+              </div>
+            )}
+          </button>
+        </div>
+      </div>
 
       {/* Chat window drawer */}
       <AnimatePresence>

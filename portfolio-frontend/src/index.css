@@ -170,3 +170,25 @@
 .animate-glow-pulse-purple {
   animation: glow-pulse-purple 3s ease-in-out infinite;
 }
+
+/* Custom slow ping ripple effect */
+@keyframes slow-ping {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.animate-ping-slow {
+  animation: slow-ping 3.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+/* Custom bot floating and nodding animation */
+@keyframes bot-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(6deg); }
+}
+
+.animate-bot-float {
+  animation: bot-float 3s ease-in-out infinite;
+  will-change: transform;
+}
